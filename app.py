@@ -1,126 +1,112 @@
 import streamlit as st
 from supabase import create_client, Client
 
-# --- 1. CONNECTION ---
+# --- 1. CONNECTION LOGIC (With Error Handling) ---
 
 
 @st.cache_resource
 def init_connection():
     try:
-        return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-    except:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+        return create_client(url, key)
+    except Exception as e:
         return None
 
 
 supabase = init_connection()
 
 # --- 2. PAGE CONFIG ---
-st.set_page_config(page_title="Innocent Okiror | AI Specialist",
-                   page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Okiror Innocent | AI Specialist",
+                   page_icon="🤖", layout="wide")
 
-# --- 3. SIDEBAR (The Professional Touch) ---
+# --- 3. SIDEBAR ---
 with st.sidebar:
     try:
         st.image("profile.jpg", use_container_width=True)
     except:
         st.title("👤")
-
-    st.markdown("## Okiror Innocent")
+    st.header("Innocent Okiror")
     st.info("📍 Kampala, Uganda")
     st.write("---")
-    st.markdown("### 🎓 Education")
     st.caption("AI Student @ Seeta University")
-    st.caption("Alumnus @ Teso College Aloet")
-    st.write("---")
-    st.markdown("### 📧 Contact")
-    st.write("okirorinnocent49@gmail.com")
+    st.write("📧 okirorinnocent49@gmail.com")
 
-# --- 4. HERO SECTION (The Big Impression) ---
-col_logo, col_text = st.columns([1, 4])
-with col_text:
-    st.title("Artificial Intelligence Specialist")
-    st.write("Building the future of African Tech through data and code.")
-    st.markdown("---")
+# --- 4. HERO SECTION ---
+st.title("Artificial Intelligence Specialist 🚀")
+st.markdown("#### Transforming the future through Data & Machine Learning")
+st.divider()
 
-# --- 5. DASHBOARD METRICS (Visual "Wow" factor) ---
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Python", "75%", "Learning")
-m2.metric("Streamlit", "90%", "Expert")
-m3.metric("SQL/Supabase", "65%", "Active")
-m4.metric("AI/ML", "40%", "Growing")
+# --- 5. THE "WOW" METRICS ---
+# These make your site look like a high-end dashboard
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Python Skills", "80%", "+5%")
+col2.metric("Streamlit", "95%", "Expert")
+col3.metric("SQL/DB", "70%", "Active")
+col4.metric("AI Research", "50%", "Growing")
 
-# --- 6. INTERACTIVE TABS ---
-tab1, tab2, tab3 = st.tabs(["⭐ My Journey", "🛠️ Portfolio", "✉️ Guestbook"])
+# --- 6. CONTENT TABS ---
+tab1, tab2, tab3 = st.tabs(["📖 My Story", "💻 Projects", "💬 Guestbook"])
 
 with tab1:
-    st.subheader("The Story of a Tech Pioneer")
-    col_a, col_b = st.columns([3, 2])
-    with col_a:
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        st.subheader("Educational Journey")
         st.write("""
-        From the classrooms of **Mukongoro Rock P/S** to the science labs of **Teso College Aloet**, 
-        my journey has always been driven by curiosity. 
-        
-        Now, at **Seeta University**, I am specializing in Artificial Intelligence. 
-        I believe that AI isn't just about robots; it's about solving real-world 
-        problems in agriculture, education, and finance.
+        From **Teso College Aloet** to **Seeta University**, my focus has been on 
+        bridging the gap between technology and local community needs. 
+        I specialize in building intelligent systems that simplify complex data.
         """)
-    with col_b:
+    with c2:
         try:
-            st.image("school.jpg", caption="Where it all started",
-                     use_container_width=True)
+            st.image("school.jpg", use_container_width=True)
         except:
-            st.info("Add school.jpg to GitHub to see memories here.")
+            st.info("Add school.jpg to GitHub")
 
 with tab2:
-    st.subheader("Featured Work")
-    # Using columns to create "Cards"
-    c1, c2 = st.columns(2)
-    with c1:
-        with st.container(border=True):
-            st.markdown("### 🌐 Personal Cloud Portfolio")
-            st.write(
-                "A full-stack application using Supabase for real-time guestbook management.")
-            st.button("View on GitHub", key="btn1")
-
-    with c2:
-        with st.container(border=True):
-            st.markdown("### 📊 Data Analysis Hub")
-            st.write("Research projects focused on local data trends in Uganda.")
-            st.button("View Project", key="btn2")
+    st.subheader("Featured Portfolio")
+    # Using 'border=True' creates a modern card look
+    with st.container(border=True):
+        st.markdown("### 🌐 AI-Powered Portfolio")
+        st.write(
+            "A full-stack web application hosted on Streamlit Cloud with a Supabase backend.")
+        st.button("View Source Code", key="p1")
 
 with tab3:
-    st.subheader("Leave a Legacy")
-    # Form with a more modern feel
-    with st.form("guestbook", clear_on_submit=True):
-        name = st.text_input("Name", placeholder="Who are you?")
-        msg = st.text_area(
-            "Message", placeholder="Write something inspiring...")
-        submit = st.form_submit_button("Post to Guestbook")
+    st.subheader("Community Messages")
 
-        if submit and name and msg:
-            if supabase:
+    # Check if keys are working before showing the form
+    if supabase is None:
+        st.warning(
+            "🔗 Please configure your Supabase Keys in Streamlit Secrets to enable the Guestbook.")
+    else:
+        with st.form("guestbook_form", clear_on_submit=True):
+            name = st.text_input("Your Name")
+            message = st.text_area("Your Message")
+            submit = st.form_submit_button("Post Message")
+
+            if submit and name and message:
                 try:
                     supabase.table("guestbook").insert(
-                        {"name": name, "message": msg}).execute()
-                    st.success("Message live on the cloud!")
+                        {"name": name, "message": message}).execute()
+                    st.success("Success! Your message is saved.")
                     st.balloons()
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(
+                        "Connection Error: Please check your API Keys in Secrets.")
 
-    st.write("---")
-    st.markdown("### 💬 Recent Shoutouts")
-    if supabase:
+        st.divider()
+        # Display messages in a clean way
         try:
             res = supabase.table("guestbook").select(
                 "*").order("created_at", desc=True).limit(5).execute()
-            for r in res.data:
-                # Using a chat-style bubble for messages
+            for entry in res.data:
                 with st.chat_message("user"):
-                    st.write(f"**{r['name']}**")
-                    st.write(r['message'])
+                    st.write(f"**{entry['name']}**")
+                    st.write(entry['message'])
         except:
             st.write("No messages yet. Be the first!")
 
 # --- 7. FOOTER ---
-st.write("---")
-st.caption("Designed & Developed by Okiror Innocent | © 2026")
+st.divider()
+st.center = st.caption("© 2026 | Okiror Innocent | Built with ❤️ and Python")
