@@ -2,122 +2,119 @@ import streamlit as st
 from supabase import create_client, Client
 import pandas as pd
 
-# --- 1. SAFE CONNECTION ---
+# --- 1. DATABASE CONNECTION ---
 
 
 @st.cache_resource
 def init_connection():
     try:
-        # Using .strip() to clean up any invisible spaces in your secrets
         url = st.secrets["SUPABASE_URL"].strip()
         key = st.secrets["SUPABASE_KEY"].strip()
         return create_client(url, key)
-    except Exception as e:
+    except:
         return None
 
 
 supabase = init_connection()
 
-# --- 2. PAGE CONFIG ---
-st.set_page_config(page_title="Okiror | AI Portfolio",
-                   page_icon="🤖", layout="wide")
+# --- 2. PAGE CONFIGURATION ---
+st.set_page_config(page_title="Okiror Innocent | Portfolio",
+                   page_icon="🎓", layout="wide")
 
-# --- 3. SIDEBAR ---
+# --- 3. SIDEBAR (PROFESSIONAL LOOK) ---
 with st.sidebar:
     try:
         st.image("profile.jpg", use_container_width=True)
     except:
         st.title("👤")
     st.header("Innocent Okiror")
-    st.markdown("### **AI Specialist**")
-    st.divider()
-    st.write("📧 okirorinnocent49@gmail.com")
+    st.write("---")
+    st.markdown("### 📞 Contact")
+    st.write("okirorinnocent49@gmail.com")
     st.write("📍 Kampala, Uganda")
-    st.write("🎓 Seeta University")
+    st.divider()
+    st.info("AI Student @ Seeta University")
 
-# --- 4. HERO SECTION ---
-# Using columns to create a clean, modern header
-col_title, col_stats = st.columns([2, 1])
+# --- 4. MAIN HEADER ---
+st.title("Innocent Okiror")
+st.subheader("Professional Office Specialist | Aspiring AI Researcher")
+st.write("Welcome to my digital space. I combine administrative excellence with a passion for future technologies.")
 
-with col_title:
-    st.title("Innocent Okiror")
-    st.markdown("#### *Developing the future of AI in East Africa*")
-    st.write(
-        "Alumnus of Teso College Aloet (TCA). Passionate about Data Science and Machine Learning.")
+# --- 5. SKILLS DASHBOARD (THE OUTSTANDING PART) ---
+st.write("### 🛠️ Core Competencies")
+c1, c2, c3 = st.columns(3)
 
-with col_stats:
-    # Outstanding visual metrics
-    st.metric(label="Python Skills", value="95%", delta="Top Tier")
+with c1:
+    with st.container(border=True):
+        st.markdown("#### ☁️ Google Workspace")
+        st.caption("Docs, Sheets, Slides, Forms")
+        st.progress(95)
 
-st.divider()
+with c2:
+    with st.container(border=True):
+        st.markdown("#### 💻 Microsoft Office")
+        st.caption("Word, Excel, PowerPoint")
+        st.progress(90)
 
-# --- 5. DASHBOARD TILES ---
-# This replaces the old "Worst" design with a modern grid
-m1, m2, m3, m4 = st.columns(4)
-with m1:
-    st.subheader("🐍 Core")
-    st.write("Python Expert")
-with m2:
-    st.subheader("🌐 Web")
-    st.write("Streamlit Pro")
-with m3:
-    st.subheader("🗄️ Cloud")
-    st.write("Supabase DB")
-with m4:
-    st.subheader("🧠 Research")
-    st.write("AI/ML Focus")
+with c3:
+    with st.container(border=True):
+        st.markdown("#### 🗄️ Data & AI")
+        st.caption("Database Mgmt & AI Certificate (In Progress)")
+        st.progress(60)
 
-# --- 6. INTERACTIVE TABS ---
-tab1, tab2, tab3 = st.tabs(
-    ["🚀 Portfolio Gallery", "📊 Skills Matrix", "💬 Community Wall"])
+# --- 6. CONTENT TABS ---
+tab1, tab2, tab3 = st.tabs(["🏠 My Story", "🚀 AI Journey", "📝 Guestbook"])
 
 with tab1:
-    st.header("Featured Projects")
-    p1, p2 = st.columns(2)
-    with p1:
-        with st.container(border=True):
-            st.markdown("### ⚡ AI-Powered Portfolio")
-            st.write(
-                "A high-speed web application integrated with cloud databases.")
-            st.caption("Status: Live & Optimized")
-    with p2:
-        with st.container(border=True):
-            st.markdown("### 📈 Data Insights Engine")
-            st.write("Researching educational trends using advanced visualization.")
-            st.caption("Status: In Development")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.header("About Me")
+        st.write("""
+        I am a dedicated professional with a strong background in office productivity and data management. 
+        My journey started at **Teso College Aloet**, where I developed a disciplined approach to learning. 
+        
+        Currently, I am expanding my horizons at **Seeta University**, pursuing a certificate in **Artificial Intelligence**. 
+        My goal is to integrate AI tools into everyday business workflows to improve efficiency.
+        """)
+    with col2:
+        try:
+            st.image("school.jpg", caption="Educational Roots",
+                     use_container_width=True)
+        except:
+            st.write("(School Image)")
 
 with tab2:
-    st.header("Proficiency Breakdown")
-    # A bar chart makes the site look much more professional
-    skills = pd.DataFrame({
-        "Skill": ["Coding", "Mathematics", "UI Design", "Data Analysis"],
-        "Level": [90, 85, 75, 80]
+    st.header("AI Training & Progress")
+    st.info("I am currently undergoing certification in AI to understand how machine learning can solve local problems.")
+
+    # Professional skill breakdown
+    skills_data = pd.DataFrame({
+        "Skillset": ["Excel/Data", "PowerPoint", "MS Word", "Google Suite", "AI Fundamentals"],
+        "Proficiency": [85, 90, 95, 95, 40]
     })
-    st.bar_chart(skills, x="Skill", y="Level", color="#007BFF")
+    st.bar_chart(skills_data, x="Skillset", y="Proficiency", color="#1E3A8A")
 
 with tab3:
-    st.header("Public Guestbook")
-
-    if supabase is None:
-        st.error("🔑 Database Connection missing! Check your Streamlit Secrets.")
+    st.header("Community Wall")
+    if not supabase:
+        st.error("Connection keys not found in Secrets.")
     else:
         with st.form("guest_form", clear_on_submit=True):
             name = st.text_input("Name")
-            msg = st.text_area("Your Message")
-            btn = st.form_submit_button("Post Message 🚀")
+            msg = st.text_area("Leave a message")
+            submit = st.form_submit_button("Post to Wall")
 
-            if btn and name and msg:
+            if submit and name and msg:
                 try:
                     supabase.table("guestbook").insert(
                         {"name": name, "message": msg}).execute()
-                    st.success("Message live on the cloud!")
+                    st.success("Message saved!")
                     st.balloons()
                     st.rerun()
                 except Exception as e:
-                    st.error(f"Database Error: {e}")
+                    st.error(f"Error: {e}")
 
         st.divider()
-        st.subheader("Recent Transmissions")
         try:
             res = supabase.table("guestbook").select(
                 "*").order("created_at", desc=True).limit(5).execute()
@@ -125,8 +122,8 @@ with tab3:
                 with st.chat_message("user"):
                     st.write(f"**{r['name']}**: {r['message']}")
         except:
-            st.write("Waiting for the first message...")
+            st.write("No messages yet.")
 
 # --- 7. FOOTER ---
 st.divider()
-st.caption("© 2026 Okiror Innocent | Built for Performance & Style")
+st.caption("© 2026 Innocent Okiror | Built with Streamlit & Supabase")
