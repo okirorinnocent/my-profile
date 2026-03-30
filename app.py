@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 from supabase import create_client, Client
 
 # --- 1. SUPABASE CONNECTION ---
@@ -8,7 +7,6 @@ from supabase import create_client, Client
 @st.cache_resource
 def init_connection():
     try:
-        # CORRECTED: We use the NAME of the secret, not the URL itself here
         url = st.secrets["SUPABASE_URL"]
         key = st.secrets["SUPABASE_KEY"]
         return create_client(url, key)
@@ -25,10 +23,14 @@ st.set_page_config(page_title="Okiror Innocent | Portfolio",
 
 # --- 3. SIDEBAR ---
 with st.sidebar:
-    st.image("PXL_20260116_070724604.MP~2 (1).jpg", caption="Okiror Innocent")
+    # IMPORTANT: Ensure this file is named 'profile.jpg' on GitHub
+    try:
+        st.image("profile.jpg", caption="Okiror Innocent")
+    except:
+        st.warning("Profile photo not found on GitHub. Rename it to profile.jpg")
+
     st.title("Contact Me")
     st.write("📧: innocent@example.com")
-    st.write("📍: Uganda")
     st.divider()
     st.info("AI Student @ Seeta University")
 
@@ -42,56 +44,39 @@ with tab1:
     col1, col2 = st.columns([2, 1])
     with col1:
         st.header("Education & Background")
-        st.write("""
-        I was born on January 27, 2004. My education started at **Mukongoro Rock Primary School**. 
-        I then attended **Teso College Aloet (TCA)** from Senior 1 to Senior 6. 
-        TCA built my character and academic strength.
-        """)
-        st.image("WhatsApp Image 2026-03-04 at 1.41.52 PM (3).jpeg",
-                 caption="Memories of the Journey")
-
-    with col2:
-        st.header("Current Focus")
-        st.write(
-            "I am currently enrolled at **Seeta University** for an Artificial Intelligence Certificate.")
-        st.image("PXL_20260105_100654655.MP~4.jpg",
-                 caption="Learning at Seeta")
+        st.write("Born: 2004 | Schools: Mukongoro Rock P/S & Teso College Aloet.")
+        try:
+            st.image("school.jpg", caption="Memories of the Journey")
+        except:
+            st.write("(School image not found)")
 
 with tab2:
     st.header("Technical Progress")
-    st.write("Current progress in my AI Certificate program:")
-    st.write("Python")
-    st.progress(70)
-    st.write("Machine Learning")
-    st.progress(45)
-
-    c1, c2 = st.columns(2)
-    with c1:
-        st.image("tt (2).jpg", caption="Coding Session")
-    with c2:
-        st.image("PXL_20260125_134004809~5.jpg", caption="Deep Focus")
+    st.write("Python Progress")
+    st.progress(75)
+    try:
+        st.image("study.jpg", caption="Learning at Seeta University", width=500)
+    except:
+        st.write("(Study image not found)")
 
 with tab3:
     st.header("Community Guestbook")
     with st.form("guestbook_form", clear_on_submit=True):
         u_name = st.text_input("Name")
         u_msg = st.text_area("Message")
-        btn = st.form_submit_button("Send to Innocent")
+        btn = st.form_submit_button("Send")
 
         if btn and u_name and u_msg:
             if supabase:
                 try:
                     supabase.table("guestbook").insert(
                         {"name": u_name, "message": u_msg}).execute()
-                    st.success("Message saved! Refresh to see it below.")
+                    st.success("Message saved!")
                     st.balloons()
                 except Exception as e:
                     st.error(f"Error: {e}")
-            else:
-                st.error("Supabase not connected. Check your Secrets.")
 
     st.divider()
-    st.subheader("Recent Messages")
     if supabase:
         try:
             res = supabase.table("guestbook").select(
@@ -99,7 +84,4 @@ with tab3:
             for r in res.data:
                 st.write(f"**{r['name']}**: {r['message']}")
         except:
-            st.write("No messages yet. Be the first!")
-
-st.divider()
-st.caption("© 2026 Okiror Innocent")
+            st.write("No messages yet!")
