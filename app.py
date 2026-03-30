@@ -8,13 +8,9 @@ from supabase import create_client, Client
 @st.cache_resource
 def init_connection():
     try:
-        # Check if secrets exist before trying to connect
-        if "SUPABASE_URL" not in st.secrets:
-            st.error("Missing SUPABASE_URL in secrets!")
-            return None
-
-        url = st.secrets["https://oggnhlnsfgfcfgppuvuh.supabase.co"]
-        key = st.secrets["sb_publishable_u0f65Ghe6cQjFubMF0Q1wQ_--Q9FJM8"]
+        # CORRECTED: We use the NAME of the secret, not the URL itself here
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
         return create_client(url, key)
     except Exception as e:
         st.error(f"Database Connection Error: {e}")
@@ -29,7 +25,6 @@ st.set_page_config(page_title="Okiror Innocent | Portfolio",
 
 # --- 3. SIDEBAR ---
 with st.sidebar:
-    # Using your uploaded profile-style photo
     st.image("PXL_20260116_070724604.MP~2 (1).jpg", caption="Okiror Innocent")
     st.title("Contact Me")
     st.write("📧: innocent@example.com")
@@ -48,7 +43,7 @@ with tab1:
     with col1:
         st.header("Education & Background")
         st.write("""
-        I was born on **January 27, 2004**. My education started at **Mukongoro Rock Primary School**. 
+        I was born on January 27, 2004. My education started at **Mukongoro Rock Primary School**. 
         I then attended **Teso College Aloet (TCA)** from Senior 1 to Senior 6. 
         TCA built my character and academic strength.
         """)
@@ -70,7 +65,6 @@ with tab2:
     st.write("Machine Learning")
     st.progress(45)
 
-    # Displaying your study-focused photos
     c1, c2 = st.columns(2)
     with c1:
         st.image("tt (2).jpg", caption="Coding Session")
