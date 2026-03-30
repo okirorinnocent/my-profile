@@ -2,157 +2,131 @@ import streamlit as st
 from supabase import create_client, Client
 import pandas as pd
 
-# --- 1. CONNECTION ---
+# --- 1. SAFE CONNECTION ---
 
 
 @st.cache_resource
 def init_connection():
     try:
-        return create_client(st.secrets["SUPABASE_URL"], st.secrets["SUPABASE_KEY"])
-    except:
+        # Using .strip() to clean up any invisible spaces in your secrets
+        url = st.secrets["SUPABASE_URL"].strip()
+        key = st.secrets["SUPABASE_KEY"].strip()
+        return create_client(url, key)
+    except Exception as e:
         return None
 
 
 supabase = init_connection()
 
 # --- 2. PAGE CONFIG ---
-st.set_page_config(page_title="Innocent | AI Specialist",
+st.set_page_config(page_title="Okiror | AI Portfolio",
                    page_icon="🤖", layout="wide")
 
-# --- 3. COOL BACKGROUND & GLASSMORPHISM CSS ---
-st.markdown("""
-    <style>
-    /* Main Background Gradient */
-    .stApp {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        color: white;
-    }
-    
-    /* Glassmorphism Cards */
-    div[data-testid="stVerticalBlock"] > div:has(div.stMetric) {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Style for Headers */
-    h1, h2, h3 {
-        color: #00d2ff !important;
-        font-family: 'Inter', sans-serif;
-    }
-
-    /* Tab Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background-color: transparent;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        background-color: rgba(255, 255, 255, 0.05);
-        border-radius: 10px 10px 0px 0px;
-        color: white;
-        padding: 0px 20px;
-    }
-    </style>
-    """, unsafe_view_as_html=True)
-
-# --- 4. SIDEBAR ---
+# --- 3. SIDEBAR ---
 with st.sidebar:
-    st.markdown("# 👤 Profile")
     try:
         st.image("profile.jpg", use_container_width=True)
     except:
-        st.info("Upload 'profile.jpg' to GitHub")
-
-    st.markdown("### **Innocent Okiror**")
-    st.caption("AI & Machine Learning Student")
-    st.write("---")
+        st.title("👤")
+    st.header("Innocent Okiror")
+    st.markdown("### **AI Specialist**")
+    st.divider()
     st.write("📧 okirorinnocent49@gmail.com")
     st.write("📍 Kampala, Uganda")
+    st.write("🎓 Seeta University")
 
-# --- 5. HERO SECTION ---
-col_h1, col_h2 = st.columns([2, 1])
-with col_h1:
+# --- 4. HERO SECTION ---
+# Using columns to create a clean, modern header
+col_title, col_stats = st.columns([2, 1])
+
+with col_title:
     st.title("Innocent Okiror")
-    st.subheader("Building Intelligent Solutions for Tomorrow")
-    st.write("Specializing in Deep Learning and Full-Stack AI Deployment. Alumnus of Teso College Aloet.")
+    st.markdown("#### *Developing the future of AI in East Africa*")
+    st.write(
+        "Alumnus of Teso College Aloet (TCA). Passionate about Data Science and Machine Learning.")
 
-with col_h2:
-    # Outstanding visual: Animated Skill Metrics
-    st.metric(label="Python Mastery", value="92%", delta="Top 10%")
+with col_stats:
+    # Outstanding visual metrics
+    st.metric(label="Python Skills", value="95%", delta="Top Tier")
 
-# --- 6. INTERACTIVE DASHBOARD ---
-st.write("## Technical Landscape")
+st.divider()
+
+# --- 5. DASHBOARD TILES ---
+# This replaces the old "Worst" design with a modern grid
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Cloud DB", "Supabase", "Active")
-m2.metric("Frontend", "Streamlit", "Expert")
-m3.metric("Backend", "Python", "90%")
-m4.metric("University", "Seeta Uni", "Year 2")
+with m1:
+    st.subheader("🐍 Core")
+    st.write("Python Expert")
+with m2:
+    st.subheader("🌐 Web")
+    st.write("Streamlit Pro")
+with m3:
+    st.subheader("🗄️ Cloud")
+    st.write("Supabase DB")
+with m4:
+    st.subheader("🧠 Research")
+    st.write("AI/ML Focus")
 
-st.write("---")
-
-tab1, tab2, tab3 = st.tabs(["🚀 Projects", "📊 Performance", "📝 Guestbook"])
+# --- 6. INTERACTIVE TABS ---
+tab1, tab2, tab3 = st.tabs(
+    ["🚀 Portfolio Gallery", "📊 Skills Matrix", "💬 Community Wall"])
 
 with tab1:
-    st.header("Innovation Gallery")
-    c1, c2 = st.columns(2)
-    with c1:
+    st.header("Featured Projects")
+    p1, p2 = st.columns(2)
+    with p1:
         with st.container(border=True):
-            st.markdown("### 🧬 AI Portfolio Engine")
+            st.markdown("### ⚡ AI-Powered Portfolio")
             st.write(
-                "A high-performance portfolio with glassmorphism UI and Supabase integration.")
-            st.code("Python | CSS | SQL", language="python")
-    with c2:
+                "A high-speed web application integrated with cloud databases.")
+            st.caption("Status: Live & Optimized")
+    with p2:
         with st.container(border=True):
-            st.markdown("### 📈 Data Analytics Bot")
-            st.write("Analyzing local education data using NumPy and Pandas.")
-            st.code("Pandas | Matplotlib", language="python")
+            st.markdown("### 📈 Data Insights Engine")
+            st.write("Researching educational trends using advanced visualization.")
+            st.caption("Status: In Development")
 
 with tab2:
-    st.header("Growth Metrics")
-    chart_data = pd.DataFrame({
-        "Skills": ["Coding", "Mathematics", "Logic", "Design", "Research"],
-        "Level": [90, 85, 80, 70, 65]
+    st.header("Proficiency Breakdown")
+    # A bar chart makes the site look much more professional
+    skills = pd.DataFrame({
+        "Skill": ["Coding", "Mathematics", "UI Design", "Data Analysis"],
+        "Level": [90, 85, 75, 80]
     })
-    st.bar_chart(chart_data, x="Skills", y="Level", color="#00d2ff")
+    st.bar_chart(skills, x="Skill", y="Level", color="#007BFF")
 
 with tab3:
-    st.header("Connect with the Community")
-    if not supabase:
-        st.error("🔑 Connection keys missing! Go to Streamlit Settings > Secrets.")
+    st.header("Public Guestbook")
+
+    if supabase is None:
+        st.error("🔑 Database Connection missing! Check your Streamlit Secrets.")
     else:
-        # Styled Form
-        with st.form("guestbook", clear_on_submit=True):
-            st.write("Leave your mark on my journey:")
-            name = st.text_input("Full Name")
+        with st.form("guest_form", clear_on_submit=True):
+            name = st.text_input("Name")
             msg = st.text_area("Your Message")
-            btn = st.form_submit_button("Blast Off 🚀")
+            btn = st.form_submit_button("Post Message 🚀")
 
             if btn and name and msg:
                 try:
                     supabase.table("guestbook").insert(
                         {"name": name, "message": msg}).execute()
-                    st.success("Message received by the AI!")
+                    st.success("Message live on the cloud!")
                     st.balloons()
                     st.rerun()
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(f"Database Error: {e}")
 
-        # Display message wall
-        st.write("---")
+        st.divider()
+        st.subheader("Recent Transmissions")
         try:
             res = supabase.table("guestbook").select(
-                "*").order("created_at", desc=True).limit(4).execute()
+                "*").order("created_at", desc=True).limit(5).execute()
             for r in res.data:
-                with st.chat_message("assistant"):
-                    st.write(f"**{r['name']}**")
-                    st.write(r['message'])
+                with st.chat_message("user"):
+                    st.write(f"**{r['name']}**: {r['message']}")
         except:
-            st.write("The guestbook is waiting for its first entry.")
+            st.write("Waiting for the first message...")
 
 # --- 7. FOOTER ---
-st.markdown("---")
-st.caption("© 2026 Okiror Innocent | Built with Python & Pure Grit")
+st.divider()
+st.caption("© 2026 Okiror Innocent | Built for Performance & Style")
