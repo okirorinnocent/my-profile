@@ -13,8 +13,8 @@ def init_connection():
             st.error("Missing SUPABASE_URL in secrets!")
             return None
 
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
+        url = st.secrets["https://oggnhlnsfgfcfgppuvuh.supabase.co"]
+        key = st.secrets["sb_publishable_u0f65Ghe6cQjFubMF0Q1wQ_--Q9FJM8"]
         return create_client(url, key)
     except Exception as e:
         st.error(f"Database Connection Error: {e}")
