@@ -30,7 +30,7 @@ with st.sidebar:
         st.warning("Profile photo not found on GitHub. Rename it to profile.jpg")
 
     st.title("Contact Me")
-    st.write("📧: innocent@example.com")
+    st.write("📧: okirorinnocent49@gmail.com")
     st.divider()
     st.info("AI Student @ Seeta University")
 
