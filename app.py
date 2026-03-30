@@ -55,7 +55,7 @@ with tab2:
     st.write("Python Progress")
     st.progress(75)
     try:
-        st.image("study.png", caption="Learning at Seeta University", width=500)
+        st.image("study.jpg", caption="Learning at Seeta University", width=500)
     except:
         st.write("(Study image not found)")
 
