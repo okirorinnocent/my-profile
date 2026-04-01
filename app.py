@@ -21,7 +21,7 @@ supabase = init_connection()
 st.set_page_config(page_title="Okiror Innocent | Portfolio",
                    page_icon="🎓", layout="wide")
 
-# --- 3. SIDEBAR (WITH NEW FEATURES) ---
+# --- 3. SIDEBAR (SOCIALS & DOWNLOADS) ---
 with st.sidebar:
     try:
         st.image("profile.jpg", use_container_width=True)
@@ -29,16 +29,22 @@ with st.sidebar:
         st.title("👤")
     st.header("Innocent Okiror")
     st.write("---")
-    st.markdown("### 📞 Contact")
+
+    st.markdown("### 📞 Contact & Socials")
     st.write("📩 okirorinnocent49@gmail.com")
     st.write("📍 Kampala, Uganda")
 
-    # NEW FEATURE: Social Media Link
-    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-profile-url)")
+    # SOCIAL MEDIA BADGES
+    # Replace the URLs below with your actual profile links
+    st.markdown("[![LinkedIn](www.linkedin.com/in/innocent-okiror-2793443b0)")
+    st.markdown("[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/256726278320)")
+    st.markdown(
+        "[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/innocent_okiror)")
+    st.markdown("[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/innoc_entokiror/)")
 
     st.divider()
 
-    # NEW FEATURE: Download Resume Button
+    # RESUME DOWNLOAD
     try:
         with open("my_cv.pdf", "rb") as file:
             st.download_button(
@@ -128,10 +134,9 @@ with tab3:
 
             if submit and name and msg:
                 try:
+                    # ONLY INSERTING: No code here allows reading from the DB
                     supabase.table("guestbook").insert(
                         {"name": name, "message": msg}).execute()
-
-                    # UI FEEDBACK: Success message + Balloons + Toast
                     st.success("Message saved! Thank you.")
                     st.balloons()
                     st.toast("I've received your message!", icon="📩")
