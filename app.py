@@ -21,7 +21,7 @@ supabase = init_connection()
 st.set_page_config(page_title="Okiror Innocent | Portfolio",
                    page_icon="🎓", layout="wide")
 
-# --- 3. SIDEBAR ---
+# --- 3. SIDEBAR (WITH NEW FEATURES) ---
 with st.sidebar:
     try:
         st.image("profile.jpg", use_container_width=True)
@@ -30,8 +30,27 @@ with st.sidebar:
     st.header("Innocent Okiror")
     st.write("---")
     st.markdown("### 📞 Contact")
-    st.write("okirorinnocent49@gmail.com")
+    st.write("📩 okirorinnocent49@gmail.com")
     st.write("📍 Kampala, Uganda")
+
+    # NEW FEATURE: Social Media Link
+    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-profile-url)")
+
+    st.divider()
+
+    # NEW FEATURE: Download Resume Button
+    try:
+        with open("my_cv.pdf", "rb") as file:
+            st.download_button(
+                label="📄 Download My CV",
+                data=file,
+                file_name="Innocent_Okiror_CV.pdf",
+                mime="application/pdf",
+                use_container_width=True
+            )
+    except:
+        st.caption("⚠️ Upload 'my_cv.pdf' to GitHub to enable download.")
+
     st.divider()
     st.info("AI Student @ Seeta University")
 
@@ -93,9 +112,9 @@ with tab2:
     })
     st.bar_chart(skills_data, x="Skillset", y="Proficiency", color="#1E3A8A")
 
+# --- 7. PRIVATE GUESTBOOK ---
 with tab3:
     st.header("Community Wall")
-    # I added a small note here so users know their message was sent successfully
     st.write(
         "Leave a private message for me below. Your message is sent directly to my database.")
 
@@ -109,14 +128,16 @@ with tab3:
 
             if submit and name and msg:
                 try:
-                    # ONLY INSERTING DATA: The "Select" code is gone.
                     supabase.table("guestbook").insert(
                         {"name": name, "message": msg}).execute()
-                    st.success("Message saved! Thank you for your feedback.")
+
+                    # UI FEEDBACK: Success message + Balloons + Toast
+                    st.success("Message saved! Thank you.")
                     st.balloons()
+                    st.toast("I've received your message!", icon="📩")
                 except Exception as e:
                     st.error(f"Error: {e}")
 
-# --- 7. FOOTER ---
+# --- 8. FOOTER ---
 st.divider()
 st.caption("© 2026 Innocent Okiror | Built with Streamlit & Supabase")
