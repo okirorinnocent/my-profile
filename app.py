@@ -21,7 +21,7 @@ supabase = init_connection()
 st.set_page_config(page_title="Okiror Innocent | Portfolio",
                    page_icon="🎓", layout="wide")
 
-# --- 3. SIDEBAR (PROFESSIONAL LOOK) ---
+# --- 3. SIDEBAR ---
 with st.sidebar:
     try:
         st.image("profile.jpg", use_container_width=True)
@@ -40,7 +40,7 @@ st.title("Innocent Okiror")
 st.subheader("Professional Office Specialist | Aspiring AI Researcher")
 st.write("Welcome to my digital space. I combine administrative excellence with a passion for future technologies.")
 
-# --- 5. SKILLS DASHBOARD (THE OUTSTANDING PART) ---
+# --- 5. SKILLS DASHBOARD ---
 st.write("### 🛠️ Core Competencies")
 c1, c2, c3 = st.columns(3)
 
@@ -87,7 +87,6 @@ with tab2:
     st.header("AI Training & Progress")
     st.info("I am currently undergoing certification in AI to understand how machine learning can solve local problems.")
 
-    # Professional skill breakdown
     skills_data = pd.DataFrame({
         "Skillset": ["Excel/Data", "PowerPoint", "MS Word", "Google Suite", "AI Fundamentals"],
         "Proficiency": [85, 90, 95, 95, 40]
@@ -96,6 +95,9 @@ with tab2:
 
 with tab3:
     st.header("Community Wall")
+    st.write(
+        "Leave a private message for me below. Your message will be sent directly to my database.")
+
     if not supabase:
         st.error("Connection keys not found in Secrets.")
     else:
@@ -106,23 +108,14 @@ with tab3:
 
             if submit and name and msg:
                 try:
+                    # This sends the data to your Supabase table
                     supabase.table("guestbook").insert(
                         {"name": name, "message": msg}).execute()
-                    st.success("Message saved!")
+                    st.success(
+                        "Thank you! Your message has been sent privately.")
                     st.balloons()
-                    st.rerun()
                 except Exception as e:
                     st.error(f"Error: {e}")
-
-        st.divider()
-        try:
-            res = supabase.table("guestbook").select(
-                "*").order("created_at", desc=True).limit(5).execute()
-            for r in res.data:
-                with st.chat_message("user"):
-                    st.write(f"**{r['name']}**: {r['message']}")
-        except:
-            st.write("No messages yet.")
 
 # --- 7. FOOTER ---
 st.divider()
