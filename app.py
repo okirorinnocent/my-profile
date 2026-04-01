@@ -32,11 +32,11 @@ with st.sidebar:
 
     st.markdown("### 📞 Contact & Socials")
     st.write("📩 okirorinnocent49@gmail.com")
-    st.write("📍 Kampala, Uganda")
+    st.write("Kumi, Uganda")
 
     # SOCIAL MEDIA BADGES
     # Replace the URLs below with your actual profile links
-    st.markdown("[![LinkedIn](www.linkedin.com/in/innocent-okiror-2793443b0)")
+    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/innocent-okiror-2793443b0)")
     st.markdown("[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/256726278320)")
     st.markdown(
         "[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/innocent_okiror)")
