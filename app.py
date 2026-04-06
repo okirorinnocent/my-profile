@@ -103,7 +103,7 @@ with tab1:
         """)
     with col2:
         try:
-            st.image("school.jpg", caption="Educational Roots",
+            st.image("school.png", caption="Educational Roots",
                      use_container_width=True)
         except:
             st.write("(School Image)")
