@@ -24,7 +24,7 @@ st.set_page_config(page_title="Okiror Innocent | Portfolio",
 # --- 3. SIDEBAR (SOCIALS & DOWNLOADS) ---
 with st.sidebar:
     try:
-        st.image("profile.jpg", use_container_width=True)
+        st.image("profile.png", use_container_width=True)
     except:
         st.title("👤")
     st.header("Innocent Okiror")
