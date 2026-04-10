@@ -58,8 +58,8 @@ with st.sidebar:
         st.caption("⚠️ Upload 'my_cv.pdf' to GitHub to enable download.")
 
     st.divider()
-    st.info("AI Implementation Specialist | Certified by Seeta University | Optimizing Business Workflows with AI
-")
+    st.info("AI Implementation Specialist | Certified by Seeta University | Optimizing Business Workflows with AI")
+
 
 # --- 4. MAIN HEADER ---
 st.title("Innocent Okiror")
