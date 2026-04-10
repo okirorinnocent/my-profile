@@ -98,8 +98,7 @@ with tab1:
         I am a dedicated professional with a strong background in office productivity and data management. 
         My journey started at **Teso College Aloet**, where I developed a disciplined approach to learning. 
         
-        Currently, I am expanding my horizons at **Seeta University**, pursuing a certificate in **Artificial Intelligence**. 
-        My goal is to integrate AI tools into everyday business workflows to improve efficiency.
+        I recently earned a certificate in ** Artificial Intelligence ** from ** Seeta University **. My objective is to leverage AI-powered tools to optimize business workflows and drive operational efficiency.
         """)
     with col2:
         try:
