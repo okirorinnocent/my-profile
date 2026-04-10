@@ -58,7 +58,8 @@ with st.sidebar:
         st.caption("⚠️ Upload 'my_cv.pdf' to GitHub to enable download.")
 
     st.divider()
-    st.info("AI Student @ Seeta University")
+    st.info("AI Implementation Specialist | Certified by Seeta University | Optimizing Business Workflows with AI
+")
 
 # --- 4. MAIN HEADER ---
 st.title("Innocent Okiror")
@@ -84,7 +85,7 @@ with c2:
 with c3:
     with st.container(border=True):
         st.markdown("#### 🗄️ Data & AI")
-        st.caption("Database Mgmt & AI Certificate (In Progress)")
+        st.caption("Database Mgmt & AI Certificate")
         st.progress(60)
 
 # --- 6. CONTENT TABS ---
@@ -109,7 +110,7 @@ with tab1:
 
 with tab2:
     st.header("AI Training & Progress")
-    st.info("I am currently undergoing certification in AI to understand how machine learning can solve local problems.")
+    st.info("I recently completed undergoing certification in AI to understand how machine learning can solve local problems.")
 
     skills_data = pd.DataFrame({
         "Skillset": ["Excel/Data", "PowerPoint", "MS Word", "Google Suite", "AI Fundamentals"],
