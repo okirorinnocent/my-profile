@@ -1,6 +1,6 @@
-import streamlit as st
-from supabase import create_client, Client
 import pandas as pd
+import streamlit as st
+from supabase import Client, create_client
 
 # --- 1. DATABASE CONNECTION ---
 
@@ -11,40 +11,109 @@ def init_connection():
         url = st.secrets["SUPABASE_URL"].strip()
         key = st.secrets["SUPABASE_KEY"].strip()
         return create_client(url, key)
-    except:
+    except Exception:
         return None
 
 
 supabase = init_connection()
 
-# --- 2. PAGE CONFIGURATION ---
-st.set_page_config(page_title="Okiror Innocent | Portfolio",
-                   page_icon="🎓", layout="wide")
+# --- 2. PAGE CONFIGURATION & CUSTOM STYLING ---
+st.set_page_config(
+    page_title="Innocent Okiror | CS & AI Portfolio",
+    page_icon="🎓",
+    layout="wide",
+)
 
-# --- 3. SIDEBAR (SOCIALS & DOWNLOADS) ---
+# Custom CSS for a refined, classic theme
+st.markdown(
+    """
+    <style>
+    /* Main Background & Accent Colors */
+    .stApp {
+        background-color: #f8fafc;
+    }
+    
+    /* Project Card Custom Styling */
+    .project-card {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Tech Tag Badges */
+    .tech-tag {
+        display: inline-block;
+        background-color: #e0e7ff;
+        color: #3730a3;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+    }
+    
+    /* Classic Header Styling */
+    .main-title {
+        font-family: 'Inter', sans-serif;
+        color: #0f172a;
+        font-weight: 800;
+        font-size: 2.5rem;
+    }
+    .sub-title {
+        color: #475569;
+        font-size: 1.25rem;
+        font-weight: 400;
+        margin-bottom: 1.5rem;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
+# --- 3. SIDEBAR (PROFILE, SOCIALS, DOWNLOADS) ---
 with st.sidebar:
     try:
         st.image("profile.png", use_container_width=True)
-    except:
-        st.title("👤")
-    st.header("Innocent Okiror")
-    st.write("---")
+    except Exception:
+        st.markdown(
+            "<h1 style='text-align: center;'>👤</h1>", unsafe_allow_html=True
+        )
 
-    st.markdown("### 📞 Contact & Socials")
+    st.markdown("## **Innocent Okiror**")
+    st.caption("👨‍💻 Computer Science Student @ MUST")
+    st.caption("🤖 AI & Software Engineering")
+    st.divider()
+
+    st.markdown("### 📞 Contacts & Profiles")
     st.write("📩 okirorinnocent49@gmail.com")
-    st.write("Kumi, Uganda")
+    st.write("📍 Mbarara / Kumi, Uganda")
 
-    # SOCIAL MEDIA BADGES
-    # Replace the URLs below with your actual profile links
-    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/innocent-okiror-2793443b0)")
-    st.markdown("[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/256726278320)")
+    # Badges
     st.markdown(
-        "[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/innocent_okiror)")
-    st.markdown("[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/innoc_entokiror/)")
+        "[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/innocent-okiror-2793443b0)"
+    )
+    st.markdown(
+        "[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/)"
+    )
+    st.markdown(
+        "[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/256726278320)"
+    )
+    st.markdown(
+        "[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/innocent_okiror)"
+    )
 
     st.divider()
 
-    # RESUME DOWNLOAD
+    # Resume Download
     try:
         with open("my_cv.pdf", "rb") as file:
             st.download_button(
@@ -52,97 +121,230 @@ with st.sidebar:
                 data=file,
                 file_name="Innocent_Okiror_CV.pdf",
                 mime="application/pdf",
-                use_container_width=True
+                use_container_width=True,
             )
-    except:
-        st.caption("⚠️ Upload 'my_cv.pdf' to GitHub to enable download.")
+    except Exception:
+        st.caption(
+            "⚠️ Add 'my_cv.pdf' to your root directory to enable CV download.")
 
     st.divider()
-    st.info("AI Implementation Specialist | Certified by Seeta University | Optimizing Business Workflows with AI")
-
+    st.info(
+        "💡 **Mission:** Developing scalable software and AI solutions to solve real-world problems in East Africa."
+    )
 
 # --- 4. MAIN HEADER ---
-st.title("Innocent Okiror")
-st.subheader("Professional Office Specialist | Aspiring AI Researcher")
-st.write("Welcome to my digital space. I combine administrative excellence with a passion for future technologies.")
+st.markdown('<div class="main-title">Innocent Okiror</div>',
+            unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-title">BSc. Computer Science Student | Mbarara University of Science and Technology</div>',
+    unsafe_allow_html=True,
+)
 
-# --- 5. SKILLS DASHBOARD ---
-st.write("### 🛠️ Core Competencies")
-c1, c2, c3 = st.columns(3)
+# Highlights Banner
+h1, h2, h3 = st.columns(3)
+with h1:
+    st.metric(label="Institution", value="MUST", delta="BSc. CS")
+with h2:
+    st.metric(label="Focus Area", value="Software & AI",
+              delta="Python / SQL / Web")
+with h3:
+    st.metric(label="Certification",
+              value="Seeta Univ.", delta="AI Specialist")
 
-with c1:
-    with st.container(border=True):
-        st.markdown("#### ☁️ Google Workspace")
-        st.caption("Docs, Sheets, Slides, Forms")
-        st.progress(95)
+st.divider()
 
-with c2:
-    with st.container(border=True):
-        st.markdown("#### 💻 Microsoft Office")
-        st.caption("Word, Excel, PowerPoint")
-        st.progress(90)
+# --- 5. TAB NAVIGATION ---
+tab_projects, tab_about, tab_skills, tab_guestbook = st.tabs(
+    ["🚀 Projects & Portfolio", "🏠 About & Background",
+        "🛠️ Technical Skills", "📝 Guestbook"]
+)
 
-with c3:
-    with st.container(border=True):
-        st.markdown("#### 🗄️ Data & AI")
-        st.caption("Database Mgmt & AI Certificate")
-        st.progress(60)
+# ==========================================
+# TAB 1: FEATURED PROJECTS SECTION
+# ==========================================
+with tab_projects:
+    st.header("Featured Projects")
+    st.caption(
+        "Explore my latest software applications, web apps, and machine learning models.")
 
-# --- 6. CONTENT TABS ---
-tab1, tab2, tab3 = st.tabs(["🏠 My Story", "🚀 AI Journey", "📝 Guestbook"])
+    # Project Data Source (Easy to update and add more projects)
+    projects = [
+        {
+            "title": "Smart Campus Student Portal",
+            "category": "Web Development",
+            "desc": "A streamlined web interface for managing student schedules, course resources, and internal notifications.",
+            "tech": ["Python", "Streamlit", "Supabase", "SQL"],
+            "github": "https://github.com/innocent-okiror",
+            "demo": "https://streamlit.io",
+            "status": "Completed",
+        },
+        {
+            "title": "AI Workflow Automation Suite",
+            "category": "Artificial Intelligence",
+            "desc": "Automated data processing tool that integrates LLM pipelines to generate summaries and automate office workflows.",
+            "tech": ["Python", "OpenAI API", "Pandas", "JSON"],
+            "github": "https://github.com/innocent-okiror",
+            "demo": None,
+            "status": "In Progress",
+        },
+        {
+            "title": "Database Management System for Records",
+            "category": "Database Engineering",
+            "desc": "Relational database schema and dashboard tailored for tracking inventory and user logs with secure permissions.",
+            "tech": ["PostgreSQL", "Supabase", "Python"],
+            "github": "https://github.com/innocent-okiror",
+            "demo": "https://supabase.com",
+            "status": "Completed",
+        },
+    ]
 
-with tab1:
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.header("About Me")
-        st.write("""
-        I am a dedicated professional with a strong background in office productivity and data management. 
-        My journey started at **Teso College Aloet**, where I developed a disciplined approach to learning. 
-        
-        I recently earned a certificate in **Artificial Intelligence** from **Seeta University**. My objective is to leverage AI-powered tools to optimize business workflows and drive operational efficiency.
-        """)
-    with col2:
+    # Search & Filter Controls
+    f_col1, f_col2 = st.columns([2, 1])
+    with f_col1:
+        search_query = st.text_input(
+            "🔍 Search projects by keyword or tech...", "")
+    with f_col2:
+        category_filter = st.selectbox(
+            "Filter Category",
+            ["All Categories", "Web Development",
+                "Artificial Intelligence", "Database Engineering"],
+        )
+
+    st.write("")  # Spacing
+
+    # Display Filtered Projects in Grid
+    filtered_projects = [
+        p for p in projects
+        if (category_filter == "All Categories" or p["category"] == category_filter)
+        and (search_query.lower() in p["title"].lower() or search_query.lower() in " ".join(p["tech"]).lower())
+    ]
+
+    if not filtered_projects:
+        st.info("No projects match your search criteria.")
+
+    for proj in filtered_projects:
+        with st.container(border=True):
+            col_info, col_links = st.columns([3, 1])
+
+            with col_info:
+                st.subheader(f"📌 {proj['title']}")
+                st.caption(
+                    f"**Category:** {proj['category']} | **Status:** `{proj['status']}`")
+                st.write(proj["desc"])
+
+                # Render Tech Tags
+                tags_html = "".join(
+                    [f'<span class="tech-tag">{t}</span>' for t in proj["tech"]])
+                st.markdown(tags_html, unsafe_allow_html=True)
+
+            with col_links:
+                st.write("")
+                st.write("")
+                if proj["github"]:
+                    st.link_button("💻 View GitHub",
+                                   proj["github"], use_container_width=True)
+                if proj["demo"]:
+                    st.link_button(
+                        "🚀 Live Demo", proj["demo"], use_container_width=True)
+
+
+# ==========================================
+# TAB 2: ABOUT & BACKGROUND
+# ==========================================
+with tab_about:
+    col_text, col_img = st.columns([2, 1])
+
+    with col_text:
+        st.header("My Journey")
+        st.write(
+            """
+            I am currently pursuing a degree in **Computer Science at Mbarara University of Science and Technology (MUST)**. 
+            My educational foundation was built at **Teso College Aloet**, where I developed analytical discipline and logical thinking.
+            
+            Having earned a certification in **Artificial Intelligence** from **Seeta University**, I am blending administrative precision with advanced computing concepts. 
+            My goal is to design software architectures and AI models that enhance data integrity, automate workflows, and empower businesses in Uganda and across the globe.
+            """
+        )
+
+        st.subheader("🎓 Education & Credentials")
+        st.markdown(
+            """
+            - **BSc. Computer Science** — *Mbarara University of Science and Technology (MUST)*
+            - **Certificate in Artificial Intelligence** — *Seeta University*
+            - **Uganda Advanced Certificate of Education (UACE)** — *Teso College Aloet*
+            """
+        )
+
+    with col_img:
         try:
-            st.image("school.png", caption="Educational Roots",
+            st.image("school.png", caption="Academic Roots",
                      use_container_width=True)
-        except:
-            st.write("(School Image)")
+        except Exception:
+            st.info("🎓 Mbarara University of Science and Technology (MUST)")
 
-with tab2:
-    st.header("AI Training & Progress")
-    st.info("I recently completed undergoing certification in AI to understand how machine learning can solve local problems.")
 
-    skills_data = pd.DataFrame({
-        "Skillset": ["Excel/Data", "PowerPoint", "MS Word", "Google Suite", "AI Fundamentals"],
-        "Proficiency": [85, 90, 95, 95, 40]
-    })
-    st.bar_chart(skills_data, x="Skillset", y="Proficiency", color="#1E3A8A")
+# ==========================================
+# TAB 3: TECHNICAL SKILLS & PROFICIENCY
+# ==========================================
+with tab_skills:
+    st.header("Technical Competencies")
 
-# --- 7. PRIVATE GUESTBOOK ---
-with tab3:
-    st.header("Community Wall")
-    st.write(
-        "Leave a private message for me below. Your message is sent directly to my database.")
+    sk1, sk2, sk3 = st.columns(3)
+    with sk1:
+        with st.container(border=True):
+            st.markdown("#### 💻 Languages")
+            st.markdown(
+                "- Python\n- SQL\n- HTML5 / CSS3\n- JavaScript (Basic)")
+    with sk2:
+        with st.container(border=True):
+            st.markdown("#### 🛠️ Frameworks & Tools")
+            st.markdown(
+                "- Streamlit\n- Pandas & NumPy\n- Supabase / PostgreSQL\n- Git & GitHub")
+    with sk3:
+        with st.container(border=True):
+            st.markdown("#### 🤖 Core Domains")
+            st.markdown(
+                "- Software Engineering\n- AI Workflow Automation\n- Database Design\n- Data Analysis")
+
+    st.divider()
+    st.subheader("Proficiency Matrix")
+    skills_df = pd.DataFrame(
+        {
+            "Skillset": ["Python Programming", "Database Engineering", "Web Apps (Streamlit)", "AI Systems", "Office Suite"],
+            "Proficiency Level (%)": [82, 75, 80, 68, 95],
+        }
+    )
+    st.bar_chart(skills_df, x="Skillset",
+                 y="Proficiency Level (%)", color="#1d4ed8")
+
+
+# ==========================================
+# TAB 4: GUESTBOOK
+# ==========================================
+with tab_guestbook:
+    st.header("Community Guestbook")
+    st.write("Feel free to leave a note or feedback. Messages are sent directly to my Supabase database.")
 
     if not supabase:
-        st.error("Connection keys not found in Secrets.")
+        st.warning(
+            "⚠️ Database connection keys (`SUPABASE_URL`, `SUPABASE_KEY`) are missing in Streamlit secrets.")
     else:
-        with st.form("guest_form", clear_on_submit=True):
-            name = st.text_input("Name")
-            msg = st.text_area("Leave a message")
-            submit = st.form_submit_button("Post to Wall")
+        with st.form("guestbook_form", clear_on_submit=True):
+            name_input = st.text_input("Your Name / Organization")
+            message_input = st.text_area("Your Message")
+            submitted = st.form_submit_button("Submit Message")
 
-            if submit and name and msg:
+            if submitted and name_input and message_input:
                 try:
-                    # ONLY INSERTING: No code here allows reading from the DB
                     supabase.table("guestbook").insert(
-                        {"name": name, "message": msg}).execute()
-                    st.success("Message saved! Thank you.")
+                        {"name": name_input, "message": message_input}
+                    ).execute()
+                    st.success("Thank you! Your message has been logged.")
                     st.balloons()
-                    st.toast("I've received your message!", icon="📩")
-                except Exception as e:
-                    st.error(f"Error: {e}")
+                except Exception as err:
+                    st.error(f"Error submitting message: {err}")
 
-# --- 8. FOOTER ---
+# --- 6. FOOTER ---
 st.divider()
-st.caption("© 2026 Innocent Okiror | Built with Streamlit & Supabase")
+st.caption(
+    "© 2026 Innocent Okiror | Built with Python, Streamlit & Supabase @ MUST")
