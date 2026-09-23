@@ -32,7 +32,7 @@ st.markdown(
     .stApp {
         background-color: #f8fafc;
     }
-    
+
     /* Project Card Custom Styling */
     .project-card {
         background-color: #ffffff;
@@ -47,7 +47,7 @@ st.markdown(
         transform: translateY(-2px);
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
-    
+
     /* Tech Tag Badges */
     .tech-tag {
         display: inline-block;
@@ -60,7 +60,7 @@ st.markdown(
         margin-right: 6px;
         margin-bottom: 6px;
     }
-    
+
     /* Classic Header Styling */
     .main-title {
         font-family: 'Inter', sans-serif;
@@ -145,11 +145,11 @@ h1, h2, h3 = st.columns(3)
 with h1:
     st.metric(label="Institution", value="MUST", delta="BSc. CS")
 with h2:
-    st.metric(label="Focus Area", value="Software & AI",
-              delta="Python / SQL / Web")
+    st.metric(label="Focus Area", value="Software, Cybersecurity,& AI (Machine Learning and Data Science)",
+              delta="Python / SQL / Web / C/ Java  ")
 with h3:
     st.metric(label="Certification",
-              value="Seeta Univ.", delta="AI Specialist")
+              value="Seeta Univ.", delta="AI TOOLS")
 
 st.divider()
 
@@ -170,59 +170,77 @@ with tab_projects:
     # Project Data Source (Easy to update and add more projects)
     projects = [
         {
-            "title": "Smart Campus Student Portal",
-            "category": "Web Development",
-            "desc": "A streamlined web interface for managing student schedules, course resources, and internal notifications.",
-            "tech": ["Python", "Streamlit", "Supabase", "SQL"],
-            "github": "https://github.com/innocent-okiror",
-            "demo": "https://streamlit.io",
-            "status": "Completed",
+            {
+                "title": "OKIROR'S AI — Intelligent Workspace Companion",
+                "category": "Artificial Intelligence",
+                "desc": "A custom dark-themed conversational AI workspace assistant powered by Google's Gemini models, featuring customizable persona instructions, custom CSS contrast styling, and session history management.",
+                "tech": [
+                    "Python",
+                    "Streamlit",
+                    "Google GenAI SDK",
+                    "CSS Custom Styling",
+                ],
+                "github": "https://github.com/okirorinnocent/4G",
+                "demo": "https://evbmr2bmurgs3snobraabe.streamlit.app/",
+                "status": "Completed",
+            }
         },
         {
-            "title": "AI Workflow Automation Suite",
-            "category": "Artificial Intelligence",
-            "desc": "Automated data processing tool that integrates LLM pipelines to generate summaries and automate office workflows.",
-            "tech": ["Python", "OpenAI API", "Pandas", "JSON"],
-            "github": "https://github.com/innocent-okiror",
-            "demo": None,
-            "status": "In Progress",
+            {
+                "title": "Weather Prediction ML Pipeline",
+                "category": "Artificial Intelligence",
+                "desc": "An interactive Machine Learning web app built with Streamlit and Joblib that dynamically loads trained weather model artifacts (.pkl) to deliver real-time weather forecasting and feature inference.",
+                "tech": ["Python", "Streamlit", "Scikit-Learn", "Joblib", "Matplotlib", "NumPy"],
+                "github": "https://github.com/okirorinnocent/model",
+                "demo": "https://p4x9y2gikjoog9i4evnrkq.streamlit.app/",
+                "status": "Completed",
+            }
         },
         {
-            "title": "Database Management System for Records",
-            "category": "Database Engineering",
-            "desc": "Relational database schema and dashboard tailored for tracking inventory and user logs with secure permissions.",
-            "tech": ["PostgreSQL", "Supabase", "Python"],
-            "github": "https://github.com/innocent-okiror",
-            "demo": "https://supabase.com",
-            "status": "Completed",
-        },
-    ]
+            {
+                "title": "CASMI26 Molecule ID & Mass Spectra Predictor",
+                "category": "Artificial Intelligence",
+                "desc": "An end-to-end Machine Learning pipeline built with Streamlit and Random Forest to process Parquet mass spectrometry data and predict SMILES molecular structures.",
+                "tech": [
+                    "Python",
+                    "Streamlit",
+                    "Scikit-Learn",
+                    "Pandas",
+                    "PyArrow",
+                    "NumPy",
+                ],
+                # Replace with your specific GitHub repo link if different
+                "github": "https://github.com/okirorinnocent/KASUN",
+                "demo": "https://mxyli76bszrcffkapu7bik.streamlit.app/",
+                "status": "Completed",
+            }
+        ]
 
-    # Search & Filter Controls
-    f_col1, f_col2 = st.columns([2, 1])
-    with f_col1:
+        # Search & Filter Controls
+        f_col1, f_col2 = st.columns([2, 1])
+        with f_col1:
         search_query = st.text_input(
             "🔍 Search projects by keyword or tech...", "")
-    with f_col2:
+        with f_col2:
         category_filter = st.selectbox(
             "Filter Category",
             ["All Categories", "Web Development",
                 "Artificial Intelligence", "Database Engineering"],
         )
 
-    st.write("")  # Spacing
+        st.write("")  # Spacing
 
-    # Display Filtered Projects in Grid
-    filtered_projects = [
-        p for p in projects
-        if (category_filter == "All Categories" or p["category"] == category_filter)
-        and (search_query.lower() in p["title"].lower() or search_query.lower() in " ".join(p["tech"]).lower())
-    ]
+        # Display Filtered Projects in Grid
+        filtered_projects = [
+            p for p in projects
+            if (category_filter == "All Categories" or p["category"] == category_filter)
+            and (search_query.lower() in p["title"].lower() or search_query.lower() in " ".join(p["tech"]).lower())
+        ]
 
-    if not filtered_projects:
+        if not filtered_projects:
         st.info("No projects match your search criteria.")
 
-    for proj in filtered_projects:
+        for proj in filtered_projects:
         with st.container(border=True):
             col_info, col_links = st.columns([3, 1])
 
@@ -248,20 +266,20 @@ with tab_projects:
                         "🚀 Live Demo", proj["demo"], use_container_width=True)
 
 
-# ==========================================
-# TAB 2: ABOUT & BACKGROUND
-# ==========================================
-with tab_about:
-    col_text, col_img = st.columns([2, 1])
+        # ==========================================
+        # TAB 2: ABOUT & BACKGROUND
+        # ==========================================
+        with tab_about:
+        col_text, col_img = st.columns([2, 1])
 
-    with col_text:
+        with col_text:
         st.header("My Journey")
         st.write(
             """
-            I am currently pursuing a degree in **Computer Science at Mbarara University of Science and Technology (MUST)**. 
+            I am currently pursuing a degree in **Computer Science at Mbarara University of Science and Technology (MUST)**.
             My educational foundation was built at **Teso College Aloet**, where I developed analytical discipline and logical thinking.
-            
-            Having earned a certification in **Artificial Intelligence** from **Seeta University**, I am blending administrative precision with advanced computing concepts. 
+
+            Having earned a certification in **Artificial Intelligence** from **Seeta University**, I am blending administrative precision with advanced computing concepts.
             My goal is to design software architectures and AI models that enhance data integrity, automate workflows, and empower businesses in Uganda and across the globe.
             """
         )
@@ -275,7 +293,7 @@ with tab_about:
             """
         )
 
-    with col_img:
+        with col_img:
         try:
             st.image("school.png", caption="Academic Roots",
                      use_container_width=True)
@@ -283,22 +301,22 @@ with tab_about:
             st.info("🎓 Mbarara University of Science and Technology (MUST)")
 
 
-# ==========================================
-# TAB 3: TECHNICAL SKILLS & PROFICIENCY
-# ==========================================
-with tab_skills:
-    st.header("Technical Competencies")
+        # ==========================================
+        # TAB 3: TECHNICAL SKILLS & PROFICIENCY
+        # ==========================================
+        with tab_skills:
+        st.header("Technical Competencies")
 
-    sk1, sk2, sk3 = st.columns(3)
-    with sk1:
+        sk1, sk2, sk3 = st.columns(3)
+        with sk1:
         with st.container(border=True):
             st.markdown("#### 💻 Languages")
             st.markdown(
-                "- Python\n- SQL\n- HTML5 / CSS3\n- JavaScript (Basic)")
-    with sk2:
+                "- Python\n- C\n- C++ (Basic)")
+        with sk2:
         with st.container(border=True):
             st.markdown("#### 🛠️ Frameworks & Tools")
-            st.markdown(
+            st.markdown(]
                 "- Streamlit\n- Pandas & NumPy\n- Supabase / PostgreSQL\n- Git & GitHub")
     with sk3:
         with st.container(border=True):
@@ -310,7 +328,7 @@ with tab_skills:
     st.subheader("Proficiency Matrix")
     skills_df = pd.DataFrame(
         {
-            "Skillset": ["Python Programming", "Database Engineering", "Web Apps (Streamlit)", "AI Systems", "Office Suite"],
+            "Skillset": ["Python Programming", "C Programming", "C++ Programming", "Database Engineering", "Web Apps (Streamlit)", "AI Tools", "Office Suite", "Prompt Engineering", "Information Literacy & Research: Basic Information Literacy and searching, evaluating, and managing digital information", "Cloud Computing & Networking: IoT (Internet of Things) Wireless & Cloud Computing, basic cloud concepts, and network architectures" "Productivity & Workspace Tools: Digital communication and workflow management using tools like Gmail and Google Cloud suite", "Learning & Problem-Solving Strategies: Applied cognitive techniques, focus management, and learning strategies (from Learning How to Learn)"],
             "Proficiency Level (%)": [82, 75, 80, 68, 95],
         }
     )
