@@ -399,7 +399,7 @@ with tab_skills:
 # ==========================================
 # TAB 4: GUESTBOOK
 # ==========================================
-# with tab_guestbook:
+ with tab_guestbook:
     st.header("Community Guestbook")
     st.write(
         "Feel free to leave a note or feedback. Messages are sent directly to my Supabase database."
