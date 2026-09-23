@@ -310,7 +310,7 @@ with tab_about:
             My educational foundation was built at **Teso College Aloet**, where I developed analytical discipline and logical thinking.
 
             Having earned a certification in **Artificial Intelligence** from **Seeta University**, I am blending administrative precision with advanced computing concepts.
-            My goal is to design software architectures and AI models that enhance data integrity, automate workflows, and empower businesses in Uganda and across the globe.
+            My goal is to design software architectures, Cyber Security and AI models(Machine Learning & Datascience) that enhance data integrity, automate workflows, and empower businesses in Uganda and across the globe.
             """
         )
 
@@ -319,7 +319,7 @@ with tab_about:
             """
             - **BSc. Computer Science** — *Mbarara University of Science and Technology (MUST)*
             - **Certificate in Artificial Intelligence** — *Seeta University*
-            - **Uganda Advanced Certificate of Education (UACE)** — *Teso College Aloet*
+            - **Both Uganda Certificate of Education & Uganda Advanced Certificate of Education (UACE)** — *Teso College Aloet*
             """
         )
 
@@ -344,18 +344,18 @@ with tab_skills:
     with sk1:
         with st.container(border=True):
             st.markdown("#### 💻 Languages")
-            st.markdown("- Python\n- C\n- C++\n- Java\n- SQL")
+            st.markdown("- Python\n- C")
     with sk2:
         with st.container(border=True):
             st.markdown("#### 🛠️ Frameworks & Tools")
             st.markdown(
-                "- Streamlit\n- Pandas & NumPy\n- Supabase / PostgreSQL\n- Git & GitHub"
+                "- Streamlit\n- Pandas & NumPy\n- Supabase \n- Git & GitHub"
             )
     with sk3:
         with st.container(border=True):
             st.markdown("#### 🤖 Core Domains")
             st.markdown(
-                "- Software Engineering\n- AI Workflow Automation\n- Database Design\n- Data Analysis"
+                "- Software Engineering\n- AI Workflow Automation\n- Data Analysis"
             )
 
     st.divider()
@@ -365,8 +365,6 @@ with tab_skills:
             "Skillset": [
                 "Python Programming",
                 "C Programming",
-                "C++ Programming",
-                "Database Engineering",
                 "Web Apps (Streamlit)",
                 "AI Tools",
                 "Office Suite",
@@ -377,18 +375,16 @@ with tab_skills:
                 "Learning Strategies",
             ],
             "Proficiency Level (%)": [
-                88,
-                78,
-                75,
+                30,
+                30,
+                50,
                 82,
-                92,
+                60,
                 85,
-                95,
-                90,
+                70,
+                45,
                 85,
-                78,
-                92,
-                90,
+                45,
             ],
         }
     )
@@ -403,7 +399,7 @@ with tab_skills:
 # ==========================================
 # TAB 4: GUESTBOOK
 # ==========================================
-with tab_guestbook:
+# with tab_guestbook:
     st.header("Community Guestbook")
     st.write(
         "Feel free to leave a note or feedback. Messages are sent directly to my Supabase database."
@@ -432,5 +428,5 @@ with tab_guestbook:
 # --- 6. FOOTER ---
 st.divider()
 st.caption(
-    "© 2026 Innocent Okiror | Built with Python, Streamlit & Supabase @ MUST"
+    "© 2026 Innocent Okiror Contact +256763212490/+256726278320 | Built with Python, Streamlit  @ MUST"
 )
