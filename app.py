@@ -125,7 +125,8 @@ with st.sidebar:
             )
     except Exception:
         st.caption(
-            "⚠️ Add 'my_cv.pdf' to your root directory to enable CV download.")
+            "⚠️ Add 'my_cv.pdf' to your root directory to enable CV download."
+        )
 
     st.divider()
     st.info(
@@ -133,8 +134,9 @@ with st.sidebar:
     )
 
 # --- 4. MAIN HEADER ---
-st.markdown('<div class="main-title">Innocent Okiror</div>',
-            unsafe_allow_html=True)
+st.markdown(
+    '<div class="main-title">Innocent Okiror</div>', unsafe_allow_html=True
+)
 st.markdown(
     '<div class="sub-title">BSc. Computer Science Student | Mbarara University of Science and Technology</div>',
     unsafe_allow_html=True,
@@ -145,18 +147,24 @@ h1, h2, h3 = st.columns(3)
 with h1:
     st.metric(label="Institution", value="MUST", delta="BSc. CS")
 with h2:
-    st.metric(label="Focus Area", value="Software, Cybersecurity,& AI (Machine Learning and Data Science)",
-              delta="Python / SQL / Web / C/ Java  ")
+    st.metric(
+        label="Focus Area",
+        value="Software & AI",
+        delta="Python / SQL / Web / C / Java",
+    )
 with h3:
-    st.metric(label="Certification",
-              value="Seeta Univ.", delta="AI TOOLS")
+    st.metric(label="Certification", value="Seeta Univ.", delta="AI TOOLS")
 
 st.divider()
 
 # --- 5. TAB NAVIGATION ---
 tab_projects, tab_about, tab_skills, tab_guestbook = st.tabs(
-    ["🚀 Projects & Portfolio", "🏠 About & Background",
-        "🛠️ Technical Skills", "📝 Guestbook"]
+    [
+        "🚀 Projects & Portfolio",
+        "🏠 About & Background",
+        "🛠️ Technical Skills",
+        "📝 Guestbook",
+    ]
 )
 
 # ==========================================
@@ -165,114 +173,136 @@ tab_projects, tab_about, tab_skills, tab_guestbook = st.tabs(
 with tab_projects:
     st.header("Featured Projects")
     st.caption(
-        "Explore my latest software applications, web apps, and machine learning models.")
+        "Explore my latest software applications, web apps, and machine learning models."
+    )
 
-    # Project Data Source (Easy to update and add more projects)
     projects = [
         {
-            {
-                "title": "OKIROR'S AI — Intelligent Workspace Companion",
-                "category": "Artificial Intelligence",
-                "desc": "A custom dark-themed conversational AI workspace assistant powered by Google's Gemini models, featuring customizable persona instructions, custom CSS contrast styling, and session history management.",
-                "tech": [
-                    "Python",
-                    "Streamlit",
-                    "Google GenAI SDK",
-                    "CSS Custom Styling",
-                ],
-                "github": "https://github.com/okirorinnocent/4G",
-                "demo": "https://evbmr2bmurgs3snobraabe.streamlit.app/",
-                "status": "Completed",
-            }
+            "title": "OKIROR'S AI — Intelligent Workspace Companion",
+            "category": "Artificial Intelligence",
+            "desc": "A custom dark-themed conversational AI workspace assistant powered by Google's Gemini models, featuring customizable persona instructions, custom CSS contrast styling, and session history management.",
+            "tech": [
+                "Python",
+                "Streamlit",
+                "Google GenAI SDK",
+                "CSS Custom Styling",
+            ],
+            "github": "https://github.com/okirorinnocent/4G",
+            "demo": "https://evbmr2bmurgs3snobraabe.streamlit.app/",
+            "status": "Completed",
         },
         {
-            {
-                "title": "Weather Prediction ML Pipeline",
-                "category": "Artificial Intelligence",
-                "desc": "An interactive Machine Learning web app built with Streamlit and Joblib that dynamically loads trained weather model artifacts (.pkl) to deliver real-time weather forecasting and feature inference.",
-                "tech": ["Python", "Streamlit", "Scikit-Learn", "Joblib", "Matplotlib", "NumPy"],
-                "github": "https://github.com/okirorinnocent/model",
-                "demo": "https://p4x9y2gikjoog9i4evnrkq.streamlit.app/",
-                "status": "Completed",
-            }
+            "title": "Weather Prediction ML Pipeline",
+            "category": "Artificial Intelligence",
+            "desc": "An interactive Machine Learning web app built with Streamlit and Joblib that dynamically loads trained weather model artifacts (.pkl) to deliver real-time weather forecasting and feature inference.",
+            "tech": [
+                "Python",
+                "Streamlit",
+                "Scikit-Learn",
+                "Joblib",
+                "Matplotlib",
+                "NumPy",
+            ],
+            "github": "https://github.com/okirorinnocent/model",
+            "demo": "https://p4x9y2gikjoog9i4evnrkq.streamlit.app/",
+            "status": "Completed",
         },
         {
-            {
-                "title": "CASMI26 Molecule ID & Mass Spectra Predictor",
-                "category": "Artificial Intelligence",
-                "desc": "An end-to-end Machine Learning pipeline built with Streamlit and Random Forest to process Parquet mass spectrometry data and predict SMILES molecular structures.",
-                "tech": [
-                    "Python",
-                    "Streamlit",
-                    "Scikit-Learn",
-                    "Pandas",
-                    "PyArrow",
-                    "NumPy",
-                ],
-                # Replace with your specific GitHub repo link if different
-                "github": "https://github.com/okirorinnocent/KASUN",
-                "demo": "https://mxyli76bszrcffkapu7bik.streamlit.app/",
-                "status": "Completed",
-            }
-        ]
+            "title": "CASMI26 Molecule ID & Mass Spectra Predictor",
+            "category": "Artificial Intelligence",
+            "desc": "An end-to-end Machine Learning pipeline built with Streamlit and Random Forest to process Parquet mass spectrometry data and predict SMILES molecular structures.",
+            "tech": [
+                "Python",
+                "Streamlit",
+                "Scikit-Learn",
+                "Pandas",
+                "PyArrow",
+                "NumPy",
+            ],
+            "github": "https://github.com/okirorinnocent/KASUN",
+            "demo": "https://mxyli76bszrcffkapu7bik.streamlit.app/",
+            "status": "Completed",
+        },
+    ]
 
-        # Search & Filter Controls
-        f_col1, f_col2 = st.columns([2, 1])
-        with f_col1:
+    # Search & Filter Controls
+    f_col1, f_col2 = st.columns([2, 1])
+    with f_col1:
         search_query = st.text_input(
-            "🔍 Search projects by keyword or tech...", "")
-        with f_col2:
+            "🔍 Search projects by keyword or tech...", ""
+        )
+    with f_col2:
         category_filter = st.selectbox(
             "Filter Category",
-            ["All Categories", "Web Development",
-                "Artificial Intelligence", "Database Engineering"],
+            [
+                "All Categories",
+                "Web Development",
+                "Artificial Intelligence",
+                "Database Engineering",
+            ],
         )
 
-        st.write("")  # Spacing
+    st.write("")  # Spacing
 
-        # Display Filtered Projects in Grid
-        filtered_projects = [
-            p for p in projects
-            if (category_filter == "All Categories" or p["category"] == category_filter)
-            and (search_query.lower() in p["title"].lower() or search_query.lower() in " ".join(p["tech"]).lower())
-        ]
+    # Display Filtered Projects in Grid
+    filtered_projects = [
+        p
+        for p in projects
+        if (
+            category_filter == "All Categories"
+            or p["category"] == category_filter
+        )
+        and (
+            search_query.lower() in p["title"].lower()
+            or search_query.lower() in " ".join(p["tech"]).lower()
+        )
+    ]
 
-        if not filtered_projects:
+    if not filtered_projects:
         st.info("No projects match your search criteria.")
 
-        for proj in filtered_projects:
+    for proj in filtered_projects:
         with st.container(border=True):
             col_info, col_links = st.columns([3, 1])
 
             with col_info:
                 st.subheader(f"📌 {proj['title']}")
                 st.caption(
-                    f"**Category:** {proj['category']} | **Status:** `{proj['status']}`")
+                    f"**Category:** {proj['category']} | **Status:** `{proj['status']}`"
+                )
                 st.write(proj["desc"])
 
                 # Render Tech Tags
                 tags_html = "".join(
-                    [f'<span class="tech-tag">{t}</span>' for t in proj["tech"]])
+                    [
+                        f'<span class="tech-tag">{t}</span>'
+                        for t in proj["tech"]
+                    ]
+                )
                 st.markdown(tags_html, unsafe_allow_html=True)
 
             with col_links:
                 st.write("")
                 st.write("")
                 if proj["github"]:
-                    st.link_button("💻 View GitHub",
-                                   proj["github"], use_container_width=True)
+                    st.link_button(
+                        "💻 View GitHub",
+                        proj["github"],
+                        use_container_width=True,
+                    )
                 if proj["demo"]:
                     st.link_button(
-                        "🚀 Live Demo", proj["demo"], use_container_width=True)
+                        "🚀 Live Demo", proj["demo"], use_container_width=True
+                    )
 
 
-        # ==========================================
-        # TAB 2: ABOUT & BACKGROUND
-        # ==========================================
-        with tab_about:
-        col_text, col_img = st.columns([2, 1])
+# ==========================================
+# TAB 2: ABOUT & BACKGROUND
+# ==========================================
+with tab_about:
+    col_text, col_img = st.columns([2, 1])
 
-        with col_text:
+    with col_text:
         st.header("My Journey")
         st.write(
             """
@@ -293,47 +323,81 @@ with tab_projects:
             """
         )
 
-        with col_img:
+    with col_img:
         try:
-            st.image("school.png", caption="Academic Roots",
-                     use_container_width=True)
+            st.image(
+                "school.png",
+                caption="Academic Roots",
+                use_container_width=True,
+            )
         except Exception:
             st.info("🎓 Mbarara University of Science and Technology (MUST)")
 
 
-        # ==========================================
-        # TAB 3: TECHNICAL SKILLS & PROFICIENCY
-        # ==========================================
-        with tab_skills:
-        st.header("Technical Competencies")
+# ==========================================
+# TAB 3: TECHNICAL SKILLS & PROFICIENCY
+# ==========================================
+with tab_skills:
+    st.header("Technical Competencies")
 
-        sk1, sk2, sk3 = st.columns(3)
-        with sk1:
+    sk1, sk2, sk3 = st.columns(3)
+    with sk1:
         with st.container(border=True):
             st.markdown("#### 💻 Languages")
-            st.markdown(
-                "- Python\n- C\n- C++ (Basic)")
-        with sk2:
+            st.markdown("- Python\n- C\n- C++\n- Java\n- SQL")
+    with sk2:
         with st.container(border=True):
             st.markdown("#### 🛠️ Frameworks & Tools")
-            st.markdown(]
-                "- Streamlit\n- Pandas & NumPy\n- Supabase / PostgreSQL\n- Git & GitHub")
+            st.markdown(
+                "- Streamlit\n- Pandas & NumPy\n- Supabase / PostgreSQL\n- Git & GitHub"
+            )
     with sk3:
         with st.container(border=True):
             st.markdown("#### 🤖 Core Domains")
             st.markdown(
-                "- Software Engineering\n- AI Workflow Automation\n- Database Design\n- Data Analysis")
+                "- Software Engineering\n- AI Workflow Automation\n- Database Design\n- Data Analysis"
+            )
 
     st.divider()
     st.subheader("Proficiency Matrix")
     skills_df = pd.DataFrame(
         {
-            "Skillset": ["Python Programming", "C Programming", "C++ Programming", "Database Engineering", "Web Apps (Streamlit)", "AI Tools", "Office Suite", "Prompt Engineering", "Information Literacy & Research: Basic Information Literacy and searching, evaluating, and managing digital information", "Cloud Computing & Networking: IoT (Internet of Things) Wireless & Cloud Computing, basic cloud concepts, and network architectures" "Productivity & Workspace Tools: Digital communication and workflow management using tools like Gmail and Google Cloud suite", "Learning & Problem-Solving Strategies: Applied cognitive techniques, focus management, and learning strategies (from Learning How to Learn)"],
-            "Proficiency Level (%)": [82, 75, 80, 68, 95],
+            "Skillset": [
+                "Python Programming",
+                "C Programming",
+                "C++ Programming",
+                "Database Engineering",
+                "Web Apps (Streamlit)",
+                "AI Tools",
+                "Office Suite",
+                "Prompt Engineering",
+                "Information Literacy",
+                "Cloud & IoT Concepts",
+                "Productivity Tools",
+                "Learning Strategies",
+            ],
+            "Proficiency Level (%)": [
+                88,
+                78,
+                75,
+                82,
+                92,
+                85,
+                95,
+                90,
+                85,
+                78,
+                92,
+                90,
+            ],
         }
     )
-    st.bar_chart(skills_df, x="Skillset",
-                 y="Proficiency Level (%)", color="#1d4ed8")
+    st.bar_chart(
+        skills_df,
+        x="Skillset",
+        y="Proficiency Level (%)",
+        color="#1d4ed8",
+    )
 
 
 # ==========================================
@@ -341,11 +405,14 @@ with tab_projects:
 # ==========================================
 with tab_guestbook:
     st.header("Community Guestbook")
-    st.write("Feel free to leave a note or feedback. Messages are sent directly to my Supabase database.")
+    st.write(
+        "Feel free to leave a note or feedback. Messages are sent directly to my Supabase database."
+    )
 
     if not supabase:
         st.warning(
-            "⚠️ Database connection keys (`SUPABASE_URL`, `SUPABASE_KEY`) are missing in Streamlit secrets.")
+            "⚠️ Database connection keys (`SUPABASE_URL`, `SUPABASE_KEY`) are missing in Streamlit secrets."
+        )
     else:
         with st.form("guestbook_form", clear_on_submit=True):
             name_input = st.text_input("Your Name / Organization")
@@ -365,4 +432,5 @@ with tab_guestbook:
 # --- 6. FOOTER ---
 st.divider()
 st.caption(
-    "© 2026 Innocent Okiror | Built with Python, Streamlit & Supabase @ MUST")
+    "© 2026 Innocent Okiror | Built with Python, Streamlit & Supabase @ MUST"
+)
