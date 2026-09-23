@@ -399,7 +399,7 @@ with tab_skills:
 # ==========================================
 # TAB 4: GUESTBOOK
 # ==========================================
- with tab_guestbook:
+with tab_guestbook:
     st.header("Community Guestbook")
     st.write(
         "Feel free to leave a note or feedback. Messages are sent directly to my Supabase database."
@@ -428,5 +428,5 @@ with tab_skills:
 # --- 6. FOOTER ---
 st.divider()
 st.caption(
-    "© 2026 Innocent Okiror Contact +256763212490/+256726278320 | Built with Python, Streamlit  @ MUST"
+    "© 2026 Innocent Okiror Contact +256763212490/+256726278320 | Built with Python, Streamlit @ MUST"
 )
