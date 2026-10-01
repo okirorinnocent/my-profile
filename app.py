@@ -1,8 +1,12 @@
 import base64
 import json
+import os
+import re
+import time
 from datetime import datetime
 
 import pandas as pd
+import requests
 import streamlit as st
 import streamlit.components.v1 as components
 from supabase import Client, create_client
@@ -19,6 +23,7 @@ st.set_page_config(
 NAME = "Innocent Okiror"
 EMAIL = "okirorinnocent49@gmail.com"
 LOCATION = "Mbarara / Kumi, Uganda"
+GITHUB_USER = "okirorinnocent"
 ROLES = [
     "BSc. Computer Science Student",
     "AI & Machine Learning Enthusiast",
@@ -29,12 +34,14 @@ ROLES = [
 SOCIALS = [
     ("LinkedIn", "https://www.linkedin.com/in/innocent-okiror-2793443b0",
      "#0A66C2", "linkedin"),
-    ("GitHub", "https://github.com/okirorinnocent", "#181717", "github"),
+    ("GitHub", f"https://github.com/{GITHUB_USER}", "#181717", "github"),
     ("WhatsApp", "https://wa.me/256726278320", "#25D366", "whatsapp"),
     ("X", "https://x.com/innocent_okiror", "#000000", "x"),
     ("Email", f"mailto:{EMAIL}", "#EA4335", "gmail"),
 ]
 
+# "images": screenshot paths inside the assets/ folder (shown as a carousel when the files exist)
+# "highlights": your own bullet points about what you built or learned (shown only when filled in)
 PROJECTS = [
     {
         "title": "OKIROR'S AI: Intelligent Workspace Companion",
@@ -44,6 +51,8 @@ PROJECTS = [
         "github": "https://github.com/okirorinnocent/4G",
         "demo": "https://evbmr2bmurgs3snobraabe.streamlit.app/",
         "status": "Completed",
+        "images": ["assets/okiror_ai_1.png", "assets/okiror_ai_2.png"],
+        "highlights": [],
     },
     {
         "title": "Weather Prediction ML Pipeline",
@@ -53,6 +62,8 @@ PROJECTS = [
         "github": "https://github.com/okirorinnocent/model",
         "demo": "https://p4x9y2gikjoog9i4evnrkq.streamlit.app/",
         "status": "Completed",
+        "images": ["assets/weather_1.png", "assets/weather_2.png"],
+        "highlights": [],
     },
     {
         "title": "CASMI26 Molecule ID & Mass Spectra Predictor",
@@ -62,6 +73,8 @@ PROJECTS = [
         "github": "https://github.com/okirorinnocent/KASUN",
         "demo": "https://mxyli76bszrcffkapu7bik.streamlit.app/",
         "status": "Completed",
+        "images": ["assets/casmi_1.png", "assets/casmi_2.png"],
+        "highlights": [],
     },
 ]
 
@@ -82,11 +95,19 @@ TIMELINE = [
     ("UCE & UACE", "Teso College Aloet", ""),
 ]
 
+LEARNING = ["Machine Learning", "Data Science",
+            "Cyber Security", "Software Architecture"]
+
+SERVICES = [
+    ("🤖", "AI assistants & chatbots",
+     "Gemini-powered assistants with custom personas and memory."),
+    ("📊", "ML web apps", "Trained models wrapped in clean, shareable Streamlit apps."),
+    ("🧪", "Data pipelines",
+     "Cleaning, processing and predicting from CSV, Parquet and SQL data."),
+]
+
 # ---------------------------------------------------------------
-# ICONS
-# Simple Icons removed the LinkedIn logo from its CDN, which is why the
-# LinkedIn icon went missing. It is embedded here as an inline SVG instead,
-# so it can never break.
+# ICONS (LinkedIn is inline because the Simple Icons CDN dropped its logo)
 # ---------------------------------------------------------------
 _LINKEDIN_SVG = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#fff" d="'
@@ -119,7 +140,7 @@ def social_html(labelled: bool = False) -> str:
 
 
 # ---------------------------------------------------------------
-# DATABASE
+# DATA ACCESS
 # ---------------------------------------------------------------
 
 
@@ -150,26 +171,74 @@ def load_messages(limit: int = 20) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+@st.cache_data(ttl=3600, show_spinner=False)
+def github_stats(user: str) -> dict:
+    """Live numbers from the public GitHub API. Raises on failure so errors are never cached."""
+    u = requests.get(f"https://api.github.com/users/{user}", timeout=6).json()
+    repos = requests.get(
+        f"https://api.github.com/users/{user}/repos?per_page=100", timeout=6
+    ).json()
+    if "public_repos" not in u or not isinstance(repos, list):
+        raise RuntimeError("GitHub API unavailable or rate limited")
+    langs: dict[str, int] = {}
+    for r in repos:
+        if r.get("language"):
+            langs[r["language"]] = langs.get(r["language"], 0) + 1
+    return {
+        "repos": u["public_repos"],
+        "followers": u["followers"],
+        "stars": sum(r.get("stargazers_count", 0) for r in repos),
+        "langs": sorted(langs, key=langs.get, reverse=True)[:6],
+    }
+
+
 supabase = init_connection()
 
+
+def too_soon(key: str, seconds: int = 30) -> bool:
+    return time.time() - st.session_state.get(key, 0) < seconds
+
+
 # ---------------------------------------------------------------
-# PAGE STYLES
+# THEME (light / dark)
 # ---------------------------------------------------------------
+dark = st.sidebar.toggle("🌙 Dark mode", key="dark")
+
+THEME = (
+    dict(bg="#0b1120", card="#111a2e", text="#e5e7eb", muted="#94a3b8", border="#1e293b",
+         chip_bg="#1e1b4b", chip_text="#c7d2fe", accent="#818cf8", hover="#1e293b")
+    if dark
+    else dict(bg="#f1f5f9", card="#ffffff", text="#0f172a", muted="#475569", border="#e2e8f0",
+              chip_bg="#e0e7ff", chip_text="#3730a3", accent="#4338ca", hover="#e0e7ff")
+)
+root_vars = ":root{" + \
+    ";".join(f"--{k.replace('_', '-')}:{v}" for k, v in THEME.items()) + "}"
+
+st.markdown(f"<style>{root_vars}</style>", unsafe_allow_html=True)
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap');
 
 html, body, [class*="css"], .stApp { font-family: 'Inter', sans-serif; }
-.stApp { background: #f1f5f9; }
+.stApp { background: var(--bg); color: var(--text); }
 #MainMenu, footer, header[data-testid="stHeader"] { visibility: hidden; }
 .block-container { padding-top: 1.2rem; max-width: 1200px; }
+
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp p, .stApp li, .stApp label,
+.stApp [data-testid="stMarkdownContainer"], .stApp [data-testid="stMetricValue"] { color: var(--text); }
+.stApp [data-testid="stCaptionContainer"] { color: var(--muted); }
+.stApp input, .stApp textarea, .stApp [data-baseweb="select"] > div, .stApp [data-baseweb="input"],
+.stApp [data-baseweb="textarea"] { background: var(--card) !important; color: var(--text) !important; border-color: var(--border) !important; }
+.stApp .stLinkButton a, .stApp .stButton button, .stApp .stDownloadButton button, .stApp .stFormSubmitButton button {
+    background: var(--card); color: var(--text); border: 1px solid var(--border); transition: transform .2s, box-shadow .2s; }
+.stApp .stLinkButton a:hover, .stApp .stButton button:hover, .stApp .stDownloadButton button:hover, .stApp .stFormSubmitButton button:hover {
+    transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,.18); border-color: var(--accent); color: var(--accent); }
 
 @keyframes fadeUp { from {opacity:0; transform:translateY(24px);} to {opacity:1; transform:none;} }
 @keyframes grow   { from {transform:scaleX(0);} to {transform:scaleX(1);} }
 @keyframes pulse  { 0%{box-shadow:0 0 0 0 rgba(37,211,102,.55);} 70%{box-shadow:0 0 0 12px rgba(37,211,102,0);} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0);} }
 
-/* social icons */
 .socials { display:flex; flex-wrap:wrap; gap:12px; }
 .soc { display:inline-flex; align-items:center; gap:8px; padding:10px; border-radius:12px; text-decoration:none !important;
     color:#fff !important; font-size:.85rem; font-weight:600; transition: transform .2s ease, box-shadow .2s ease; }
@@ -179,43 +248,41 @@ html, body, [class*="css"], .stApp { font-family: 'Inter', sans-serif; }
 .socials.labelled { flex-direction:column; }
 .socials.labelled .soc { padding:10px 14px; }
 
-/* tabs */
-.stTabs [data-baseweb="tab-list"] { gap: 8px; }
-.stTabs [data-baseweb="tab"] { border-radius: 10px; padding: 8px 18px; font-weight:600; transition: background .2s ease; }
-.stTabs [data-baseweb="tab"]:hover { background: #e0e7ff; }
+.stTabs [data-baseweb="tab-list"] { gap: 8px; flex-wrap: wrap; }
+.stTabs [data-baseweb="tab"] { border-radius: 10px; padding: 8px 18px; font-weight:600; color: var(--text); transition: background .2s ease; }
+.stTabs [data-baseweb="tab"]:hover { background: var(--hover); }
 .stTabs [data-baseweb="tab-panel"] { animation: fadeUp .6s ease both; }
 
-/* bordered containers become animated cards */
-div[data-testid="stVerticalBlockBorderWrapper"] { background:#fff; border-radius:16px; animation: fadeUp .7s ease both;
-    transition: transform .25s ease, box-shadow .25s ease; }
-div[data-testid="stVerticalBlockBorderWrapper"]:hover { transform: translateY(-4px); box-shadow: 0 16px 30px -12px rgba(15,23,42,.25); }
+div[data-testid="stVerticalBlockBorderWrapper"] { background:var(--card); border-color:var(--border); border-radius:16px;
+    animation: fadeUp .7s ease both; transition: transform .25s ease, box-shadow .25s ease; }
+div[data-testid="stVerticalBlockBorderWrapper"]:hover { transform: translateY(-4px); box-shadow: 0 16px 30px -12px rgba(0,0,0,.35); }
 
-.tech-tag { display:inline-block; background:#e0e7ff; color:#3730a3; font-size:.75rem; font-weight:600;
+.tech-tag { display:inline-block; background:var(--chip-bg); color:var(--chip-text); font-size:.75rem; font-weight:600;
     padding:4px 12px; border-radius:999px; margin:0 6px 6px 0; transition: background .2s, color .2s; }
-.tech-tag:hover { background:#4338ca; color:#fff; }
+.tech-tag:hover { background:var(--accent); color:#fff; }
 
-/* skill bars */
 .skill { margin-bottom: 14px; }
-.skill-top { display:flex; justify-content:space-between; font-weight:600; font-size:.9rem; color:#0f172a; margin-bottom:6px; }
-.bar { height:10px; background:#e2e8f0; border-radius:999px; overflow:hidden; }
+.skill-top { display:flex; justify-content:space-between; font-weight:600; font-size:.9rem; color:var(--text); margin-bottom:6px; }
+.bar { height:10px; background:var(--border); border-radius:999px; overflow:hidden; }
 .fill { height:100%; border-radius:999px; background: linear-gradient(90deg, #4338ca, #3b82f6);
     transform-origin:left; animation: grow 1.3s cubic-bezier(.22,1,.36,1) both; }
-.group-title { font-weight:800; color:#1e3a8a; margin: 18px 0 10px; font-size:1.05rem; }
+.group-title { font-weight:800; color:var(--accent); margin: 18px 0 10px; font-size:1.05rem; }
 
-/* timeline */
-.tl { border-left:3px solid #c7d2fe; margin:12px 0 0 8px; padding-left:24px; }
+.tl { border-left:3px solid var(--border); margin:12px 0 0 8px; padding-left:24px; }
 .tl-item { position:relative; margin-bottom:22px; animation: fadeUp .7s ease both; }
 .tl-item::before { content:""; position:absolute; left:-33px; top:5px; width:14px; height:14px; border-radius:50%;
-    background:#4338ca; box-shadow:0 0 0 4px #e0e7ff; }
-.tl-title { font-weight:800; color:#0f172a; }
-.tl-sub { color:#475569; font-size:.95rem; }
-.tl-now { display:inline-block; margin-left:8px; font-size:.7rem; font-weight:700; color:#fff; background:#16a34a;
-    padding:2px 8px; border-radius:999px; }
+    background:var(--accent); box-shadow:0 0 0 4px var(--chip-bg); }
+.tl-title { font-weight:800; color:var(--text); }
+.tl-sub { color:var(--muted); font-size:.95rem; }
+.tl-now { display:inline-block; margin-left:8px; font-size:.7rem; font-weight:700; color:#fff; background:#16a34a; padding:2px 8px; border-radius:999px; }
 
-/* sidebar */
-section[data-testid="stSidebar"] { background:#fff; border-right:1px solid #e2e8f0; }
+.svc { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; height:100%;
+    transition: transform .25s, box-shadow .25s; animation: fadeUp .7s both; }
+.svc:hover { transform: translateY(-6px); box-shadow: 0 16px 28px -10px rgba(67,56,202,.4); }
+.svc .ic { font-size:1.8rem; } .svc .t { font-weight:800; color:var(--text); margin:6px 0 4px; } .svc .d { color:var(--muted); font-size:.9rem; }
+
+section[data-testid="stSidebar"] { background:var(--card); border-right:1px solid var(--border); }
 section[data-testid="stSidebar"] img { border-radius: 16px; }
-h2, h3 { color:#0f172a; }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
@@ -243,24 +310,18 @@ with st.sidebar:
     st.markdown(social_html(labelled=True), unsafe_allow_html=True)
     st.write("")
 
-    try:
+    if os.path.exists("my_cv.pdf"):
         with open("my_cv.pdf", "rb") as f:
             st.download_button(
-                "📄 Download My CV",
-                data=f,
-                file_name="Innocent_Okiror_CV.pdf",
-                mime="application/pdf",
-                use_container_width=True,
+                "📄 Download My CV", data=f.read(), file_name="Innocent_Okiror_CV.pdf",
+                mime="application/pdf", use_container_width=True, key="cv_sidebar",
             )
-    except FileNotFoundError:
-        pass
 
     st.divider()
     st.info("💡 **Mission:** Building scalable software and AI solutions for real-world problems in East Africa.")
 
 # ---------------------------------------------------------------
-# HERO: interactive particle network, typing roles, count-up stats
-# (runs in an iframe because Streamlit markdown cannot execute JavaScript)
+# HERO: particle network, typing roles, count-up stats (iframe, so JS can run)
 # ---------------------------------------------------------------
 HERO_TEMPLATE = """
 <!DOCTYPE html><html><head><meta charset="utf-8">
@@ -314,7 +375,6 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
 <script>
 (function(){
  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- // typing effect
  var roles=__ROLES__, el=document.getElementById('typed'), r=0, i=0, del=false;
  function type(){
   var w=roles[r];
@@ -325,13 +385,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%}
   setTimeout(type,del?28:55);
  }
  if(reduce){el.textContent=roles[0]}else{type()}
- // count-up
  document.querySelectorAll('.num').forEach(function(n){
   var to=+n.dataset.to,t0=null;
   function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1400,1);n.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)}
   if(reduce){n.textContent=to}else{setTimeout(function(){requestAnimationFrame(step)},600)}
  });
- // particle network
  var cv=document.getElementById('c'),ctx=cv.getContext('2d'),W,H,pts=[],mouse={x:null,y:null},dpr=window.devicePixelRatio||1;
  function size(){W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
   var n=Math.max(24,Math.min(70,Math.floor(W*H/14000)));pts=[];
@@ -390,8 +448,41 @@ tab_projects, tab_about, tab_skills, tab_guestbook, tab_contact = st.tabs(
 # ---------------------------------------------------------------
 # PROJECTS
 # ---------------------------------------------------------------
+
+
+def _step(key: str, delta: int, n: int) -> None:
+    st.session_state[key] = (st.session_state.get(key, 0) + delta) % n
+
+
+def carousel(key: str, images: list[str]) -> None:
+    n = len(images)
+    idx = st.session_state.get(key, 0) % n
+    st.image(images[idx], use_container_width=True)
+    if n > 1:
+        a, b, c = st.columns([1, 1, 5])
+        a.button("◀", key=f"{key}_prev", on_click=_step, args=(key, -1, n))
+        b.button("▶", key=f"{key}_next", on_click=_step, args=(key, 1, n))
+        c.caption(f"Screenshot {idx + 1} of {n}")
+
+
 with tab_projects:
     st.header("Featured Projects")
+
+    try:
+        gh = github_stats(GITHUB_USER)
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Public repositories", gh["repos"])
+        m2.metric("GitHub followers", gh["followers"])
+        m3.metric("Stars earned", gh["stars"])
+        if gh["langs"]:
+            st.markdown(
+                "".join(
+                    f'<span class="tech-tag">{l}</span>' for l in gh["langs"]),
+                unsafe_allow_html=True,
+            )
+    except Exception:
+        pass  # live stats are a bonus; hide silently if GitHub is unreachable
+
     categories = ["All"] + sorted({p["category"] for p in PROJECTS})
     c1, c2 = st.columns([2, 1])
     query = c1.text_input("🔍 Search by keyword or tech", "").strip().lower()
@@ -405,7 +496,7 @@ with tab_projects:
     if not shown:
         st.info("No projects match your search.")
 
-    for p in shown:
+    for i, p in enumerate(shown):
         with st.container(border=True):
             info, links = st.columns([3, 1])
             with info:
@@ -423,6 +514,14 @@ with tab_projects:
                     "💻 GitHub", p["github"], use_container_width=True)
                 st.link_button(
                     "🚀 Live Demo", p["demo"], use_container_width=True)
+
+            imgs = [x for x in p.get("images", []) if os.path.exists(x)]
+            if imgs or p.get("highlights"):
+                with st.expander("📸 Screenshots & highlights"):
+                    if imgs:
+                        carousel(f"car_{p['title']}", imgs)
+                    for h in p.get("highlights", []):
+                        st.markdown(f"- {h}")
 
 # ---------------------------------------------------------------
 # ABOUT
@@ -454,11 +553,17 @@ with tab_about:
                 f'<div class="tl-title">{title}{badge}</div><div class="tl-sub">{place}</div></div>'
             )
         st.markdown(f'<div class="tl">{items}</div>', unsafe_allow_html=True)
+
+        st.subheader("🌱 Currently exploring")
+        st.markdown(
+            "".join(f'<span class="tech-tag">{x}</span>' for x in LEARNING),
+            unsafe_allow_html=True,
+        )
     with img:
         try:
             st.image("school.png", caption="Academic Roots",
                      use_container_width=True)
-        except FileNotFoundError:
+        except Exception:
             st.info("🎓 Mbarara University of Science and Technology")
 
 # ---------------------------------------------------------------
@@ -502,18 +607,21 @@ with tab_guestbook:
         st.warning("The guestbook is temporarily unavailable.")
     else:
         with st.form("guestbook_form", clear_on_submit=True):
-            name = st.text_input("Your name / organization", max_chars=60)
-            message = st.text_area("Your message", max_chars=500)
-            submitted = st.form_submit_button("Submit")
+            g_name = st.text_input("Your name / organization", max_chars=60)
+            g_msg = st.text_area("Your message", max_chars=500)
+            g_sub = st.form_submit_button("Submit")
 
-        if submitted:
-            if not name.strip() or not message.strip():
+        if g_sub:
+            if not g_name.strip() or not g_msg.strip():
                 st.warning("Please fill in both your name and a message.")
+            elif too_soon("last_guestbook"):
+                st.warning("Please wait a few seconds before posting again.")
             else:
                 try:
                     supabase.table("guestbook").insert(
-                        {"name": name.strip(), "message": message.strip()}
+                        {"name": g_name.strip(), "message": g_msg.strip()}
                     ).execute()
+                    st.session_state["last_guestbook"] = time.time()
                     load_messages.clear()
                     st.success("Thank you! Your message has been posted.")
                     st.balloons()
@@ -548,17 +656,66 @@ with tab_contact:
     st.header("Let's work together")
     st.write(
         "Looking for a student developer for an AI, data, or web project, an internship, "
-        "or a collaboration? Reach out on whichever channel suits you."
+        "or a collaboration? Send a message or use any channel below."
     )
-    k1, k2, k3 = st.columns(3)
-    k1.link_button("💬 Chat on WhatsApp",
-                   SOCIALS[2][1], use_container_width=True)
-    k2.link_button("✉️ Send an email",
-                   f"mailto:{EMAIL}", use_container_width=True)
-    k3.link_button("🔗 Connect on LinkedIn",
-                   SOCIALS[0][1], use_container_width=True)
+
+    st.subheader("What I can help with")
+    cols = st.columns(len(SERVICES))
+    for i, (col, (ic, title, desc)) in enumerate(zip(cols, SERVICES)):
+        col.markdown(
+            f'<div class="svc" style="animation-delay:{i * 0.15:.2f}s"><div class="ic">{ic}</div>'
+            f'<div class="t">{title}</div><div class="d">{desc}</div></div>',
+            unsafe_allow_html=True,
+        )
+
     st.write("")
-    st.markdown(social_html(), unsafe_allow_html=True)
+    left, right = st.columns([3, 2])
+    with left:
+        st.subheader("Send me a message")
+        with st.form("contact_form", clear_on_submit=True):
+            c_name = st.text_input("Your name", max_chars=80)
+            c_email = st.text_input("Your email", max_chars=120)
+            c_msg = st.text_area("How can I help?", max_chars=1000)
+            c_sub = st.form_submit_button("📨 Send message")
+
+        if c_sub:
+            if not (c_name.strip() and c_msg.strip()):
+                st.warning("Please add your name and a message.")
+            elif not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", c_email.strip()):
+                st.warning("Please enter a valid email so I can reply.")
+            elif supabase is None:
+                st.info(
+                    f"The form is offline right now. Please email me at {EMAIL}.")
+            elif too_soon("last_contact", 60):
+                st.warning(
+                    "Please wait a minute before sending another message.")
+            else:
+                try:
+                    supabase.table("contact_messages").insert(
+                        {"name": c_name.strip(), "email": c_email.strip(),
+                         "message": c_msg.strip()}
+                    ).execute()
+                    st.session_state["last_contact"] = time.time()
+                    st.success("Message sent! I'll get back to you soon.")
+                except Exception:
+                    st.error(
+                        f"Could not send. Please email me directly at {EMAIL}.")
+    with right:
+        st.subheader("Or reach me directly")
+        st.link_button("💬 Chat on WhatsApp",
+                       SOCIALS[2][1], use_container_width=True)
+        st.link_button("✉️ Send an email",
+                       f"mailto:{EMAIL}", use_container_width=True)
+        st.link_button("🔗 Connect on LinkedIn",
+                       SOCIALS[0][1], use_container_width=True)
+        if os.path.exists("my_cv.pdf"):
+            with open("my_cv.pdf", "rb") as f:
+                st.download_button(
+                    "📄 Download my CV", data=f.read(), file_name="Innocent_Okiror_CV.pdf",
+                    mime="application/pdf", use_container_width=True, key="cv_contact",
+                )
+        st.write("")
+        st.markdown(social_html(), unsafe_allow_html=True)
 
 # ---------------------------------------------------------------
 # FOOTER
