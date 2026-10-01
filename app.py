@@ -691,13 +691,21 @@ with tab_contact:
                     "Please wait a minute before sending another message.")
             else:
                 try:
+                    # returning="minimal": the table is insert-only for visitors, so Supabase
+                    # must not try to read the new row back (that needs a SELECT policy)
                     supabase.table("contact_messages").insert(
                         {"name": c_name.strip(), "email": c_email.strip(),
-                         "message": c_msg.strip()}
+                         "message": c_msg.strip()},
+                        returning="minimal",
                     ).execute()
                     st.session_state["last_contact"] = time.time()
                     st.success("Message sent! I'll get back to you soon.")
-                except Exception:
+                except Exception as err:
+                    # visible in Manage app > Logs
+                    print(f"contact_messages insert failed: {err}")
+                    if st.secrets.get("DEBUG", False):
+                        # set DEBUG = true in Streamlit secrets to see the real error
+                        st.code(str(err))
                     st.error(
                         f"Could not send. Please email me directly at {EMAIL}.")
     with right:
